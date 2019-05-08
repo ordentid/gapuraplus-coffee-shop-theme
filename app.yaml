@@ -1,0 +1,26 @@
+runtime: nodejs10
+instance_class: F2
+
+handlers:
+- url: /
+  static_files: dist/index.html
+  upload: dist/index.html
+
+- url: /about
+  static_dir: dist/about/
+
+- url: /assets/css
+  static_dir: dist/assets/css
+
+- url: /assets/js
+  static_dir: dist/assets/js
+
+- url: /assets/static
+  static_dir: dist/assets/static
+
+- url: /images
+  static_dir: dist/images
+
+env_variables:
+  HOST: '0.0.0.0'
+  NODE_ENV: 'production'
