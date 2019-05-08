@@ -174,7 +174,7 @@ export default function (Vue, { router, head, isClient, appOptions }) {
               image_main: 'https://img.etimg.com/thumb/msid-67055775,width-643,imgsize-709079,resizemode-4/coffeebeans.jpg'
             })
             featuredList.push({
-              id: 1,
+              id: 2,
               name: 'Default Featured 2',
               summary: 'Default Summary 2',
               image_main: 'https://img.etimg.com/thumb/msid-67055775,width-643,imgsize-709079,resizemode-4/coffeebeans.jpg'

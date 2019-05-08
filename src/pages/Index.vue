@@ -117,12 +117,79 @@
             <v-layout column wrap pa-0 style="height: 65%; width: 100%; max-width: 100%;">
               <v-carousel hide-delimiters dark @click.native="carouselClick">
                 <v-carousel-item>
-                  <v-layout row fill-height justify-center align-center px-0 py-3 style="width: 100%; max-width: 100%;">
+                  <v-layout row fill-height justify-center align-start style="width: 100%; max-width: 100%; padding-top: 60px;">
+                    <v-flex
+                      xs5
+                      sm5
+                      md5
+                      lg5
+                      v-for="featured in featuredList"
+                      :items="featured"
+                      v-bind:key="featured.id"
+                      pa-0
+                      ma-2
+                      style="height: 50%;"
+                    >
+                      <v-card style="height: 100%; width: 100%;" flat :img="featured.image_main">
+                        <v-card-text style="height: 50%; width: 100%; background_color: white;">
+                          <v-layout column wrap fill-width fill-height justify-center align-center>
+                            <span class="title font-weight-regular mb-2">{{ featured.name }}</span>
+                            <span class="subheading font-weight-light mb-2 px-2 text-xs-center">{{ featured.summary }}</span>
+                          </v-layout>
+                        </v-card-text>
+                      </v-card>
+                    </v-flex>
                   </v-layout>
                 </v-carousel-item>
               </v-carousel>
             </v-layout>
           </v-layout>
+        </template>
+        <template v-else-if="section.sectionName == 'food'">
+          <v-app>
+            <v-layout column ma-0 pa-0 section-content hidden-sm-and-down style="background-color: #FDFFFD">
+              <v-parallax
+                dark
+                :src="menuPost.cover_image"
+                class="ma-0 pa-0 product-parallax"
+                style="height: 30%;">
+                  <v-layout column wrap ustify-center align-center pa-0 style="height: 100%; width: 100%; max-width: 100%; color: #000000;">
+                    <span class="display-1 text-xs-center font-weight-strong pt-3">{{ menuPost.title}}</span>
+                    <span class="body-1 text-xs-center pa-3" v-html="menuPost.html_content"></span>
+                  </v-layout>
+              </v-parallax>
+              <v-layout column wrap pa-0 style="height: 70%; width: 100%; max-width: 100%;">
+                <v-tabs
+                  color="white"
+                  centered
+                  dark
+                  icons-and-text
+                  height="50px"
+                  v-model="active_tab"
+                >
+                  <v-tabs-slider color="blue" />
+                  <v-tab href="#food_tab" class="minify caption resize" style="color: black;">
+                    Makanan
+                    <v-icon small color="black">fastfood</v-icon>
+                  </v-tab>
+                  <v-tab href="#drink_tab" class="minify caption ml-1 resize" style="color: black;">
+                    Minuman
+                    <v-icon small color="black">local_drink</v-icon>
+                  </v-tab>
+                  <v-tab-item :value="'food_tab'">
+                    <v-layout row wrap fill-height fill-width>
+                      asdasdasdasdasdasd
+                    </v-layout>
+                  </v-tab-item>
+                  <v-tab-item :value="'drink_tab'">
+                    <v-layout row wrap fill-height fill-width>
+                      qweqwewqeqweqwewqewqe
+                    </v-layout>
+                  </v-tab-item>
+                </v-tabs>
+              </v-layout>
+            </v-layout>
+          </v-app>
         </template>
       </ksvuefp-section>
     </ksvuefp>
@@ -190,7 +257,8 @@ export default {
       homeSection: {},
       sideMenu: [],
       page: 1,
-      limit: 2
+      limit: 2,
+      active_tab: 1
     }
   },
   mounted() {
@@ -381,5 +449,17 @@ html {
 }
 .v-parallax__content, .product-parallax {
   padding: 0 0;
+}
+.v-btn .v-btn__content .v-icon {
+  color: #000;
+}
+.v-tabs__slider-wrapper, .minify {
+  width: 83px !important;
+}
+.v-tabs__container--icons-and-text .v-tabs__div, .resize {
+  min-width: 83px;
+}
+.v-tabs__item, .minify {
+  max-width: 83px;
 }
 </style>
