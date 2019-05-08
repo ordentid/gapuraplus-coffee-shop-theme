@@ -43,6 +43,7 @@ export default function (Vue, { router, head, isClient, appOptions }) {
       menuPost: {},
       meta: {},
       featuredList: [],
+      fnbList: []
     },
     mutations: {
       setConfig(state, val) {
@@ -65,6 +66,9 @@ export default function (Vue, { router, head, isClient, appOptions }) {
       },
       setMeta(state, val) {
         state.meta = val
+      },
+      setFnbList(state, val) {
+        state.fnbList = val
       }
     },
     actions: {
@@ -190,6 +194,91 @@ export default function (Vue, { router, head, isClient, appOptions }) {
         }catch(error) {
           console.log(error)
         }
+      },
+      async fetchFnbList({commit}, params) {
+        let type = params.type
+        let limit = params.limit
+        let page = params.page
+        let headers = params.headers
+        let url = apiUrl + '/api/product?type=' + type + '&page=' + page + '&limit=' + limit
+
+        let response = await axios.get(url, {headers: headers})        
+        let data = response.data.data
+
+        if (data.length == 0){
+          data.push({
+            id: 1,
+            name: 'Default FnB 1',
+            summary: 'Default Summary 1',
+            image_main: 'https://img.etimg.com/thumb/msid-67055775,width-643,imgsize-709079,resizemode-4/coffeebeans.jpg',
+            description: 'Rp. 10K'
+          })
+          data.push({
+            id: 2,
+            name: 'Default FnB 2',
+            summary: 'Default Summary 2',
+            image_main: 'https://img.etimg.com/thumb/msid-67055775,width-643,imgsize-709079,resizemode-4/coffeebeans.jpg',
+            description: 'Rp. 10K'
+          })
+          data.push({
+            id: 3,
+            name: 'Default FnB 3',
+            summary: 'Default Summary 3',
+            image_main: 'https://img.etimg.com/thumb/msid-67055775,width-643,imgsize-709079,resizemode-4/coffeebeans.jpg',
+            description: 'Rp. 10K'
+          })
+          data.push({
+            id: 4,
+            name: 'Default FnB 4',
+            summary: 'Default Summary 4',
+            image_main: 'https://img.etimg.com/thumb/msid-67055775,width-643,imgsize-709079,resizemode-4/coffeebeans.jpg',
+            description: 'Rp. 10K'
+          })
+          data.push({
+            id: 5,
+            name: 'Default FnB 5',
+            summary: 'Default Summary 5',
+            image_main: 'https://img.etimg.com/thumb/msid-67055775,width-643,imgsize-709079,resizemode-4/coffeebeans.jpg',
+            description: 'Rp. 10K'
+          })
+          data.push({
+            id: 6,
+            name: 'Default FnB 6',
+            summary: 'Default Summary 6',
+            image_main: 'https://img.etimg.com/thumb/msid-67055775,width-643,imgsize-709079,resizemode-4/coffeebeans.jpg',
+            description: 'Rp. 10K'
+          })
+          data.push({
+            id: 7,
+            name: 'Default FnB 7',
+            summary: 'Default Summary 7',
+            image_main: 'https://img.etimg.com/thumb/msid-67055775,width-643,imgsize-709079,resizemode-4/coffeebeans.jpg',
+            description: 'Rp. 10K'
+          })
+          data.push({
+            id: 8,
+            name: 'Default FnB 8',
+            summary: 'Default Summary 8',
+            image_main: 'https://img.etimg.com/thumb/msid-67055775,width-643,imgsize-709079,resizemode-4/coffeebeans.jpg',
+            description: 'Rp. 10K'
+          })
+          data.push({
+            id: 9,
+            name: 'Default FnB 9',
+            summary: 'Default Summary 9',
+            image_main: 'https://img.etimg.com/thumb/msid-67055775,width-643,imgsize-709079,resizemode-4/coffeebeans.jpg',
+            description: 'Rp. 10K'
+          })
+          data.push({
+            id: 10,
+            name: 'Default FnB 10',
+            summary: 'Default Summary 10',
+            image_main: 'https://img.etimg.com/thumb/msid-67055775,width-643,imgsize-709079,resizemode-4/coffeebeans.jpg',
+            description: 'Rp. 10K'
+          })
+        }
+        
+        commit('setFnbList', data)
       }
     }
   })

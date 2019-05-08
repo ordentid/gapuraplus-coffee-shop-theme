@@ -164,26 +164,68 @@
                   centered
                   dark
                   icons-and-text
-                  height="50px"
-                  v-model="active_tab"
                 >
                   <v-tabs-slider color="blue" />
-                  <v-tab href="#food_tab" class="minify caption resize" style="color: black;">
+                  <v-tab href="#food_tab" class="minify caption resize" style="color: black;" @click="fetchFnbData(1)">
                     Makanan
                     <v-icon small color="black">fastfood</v-icon>
                   </v-tab>
-                  <v-tab href="#drink_tab" class="minify caption ml-1 resize" style="color: black;">
+                  <v-tab href="#drink_tab" class="minify caption ml-1 resize" style="color: black;" @click="fetchFnbData(2)">
                     Minuman
                     <v-icon small color="black">local_drink</v-icon>
                   </v-tab>
                   <v-tab-item :value="'food_tab'">
-                    <v-layout row wrap fill-height fill-width>
-                      asdasdasdasdasdasd
+                    <v-layout row wrap class="tab-content pa-0 justify-center align-start" style="height: 100%; width: 100%; max-width: 100%;">
+                      <v-flex
+                        xs2
+                        sm2
+                        md2
+                        lg2
+                        v-for="fnb in fnbList"
+                        :items="fnb"
+                        v-bind:key="fnb.id"
+                        style="height: 40%;"
+                        pa-0
+                        ma-3
+                      >
+                        <v-card style="height: 100%; width: 100%;" flat :img="fnb.image_main" @click="selectCard(fnb)">
+                          <v-layout v-show="!fnb.isShow" fill-height fill-width justify-center align-center pa-0 style="background-color: rgba(0,0,0,0.5); color: white;">
+                            <v-card-title class="subheading font-weight-regular text-xs-center">{{ fnb.name }}</v-card-title>
+                          </v-layout>
+                          <v-layout v-show="fnb.isShow" column fill-height fill-width justify-start align-start pa-0 pl-2 pt-2 style="background-color: rgba(255,255,255,0.75); color: black;">
+                            <span class="body-2 font-weight-bold text-xs-left">{{ fnb.name }}</span>
+                            <span class="caption font-weight-regular text-xs-left">{{ fnb.summary }}</span>
+                            <span class="body-2 font-weight-medium text-xs-left">{{ fnb.description }}</span>
+                          </v-layout>
+                        </v-card>
+                      </v-flex>
                     </v-layout>
                   </v-tab-item>
                   <v-tab-item :value="'drink_tab'">
-                    <v-layout row wrap fill-height fill-width>
-                      qweqwewqeqweqwewqewqe
+                    <v-layout row wrap class="tab-content pa-0 justify-center align-start" style="height: 100%; width: 100%; max-width: 100%;">
+                      <v-flex
+                        xs2
+                        sm2
+                        md2
+                        lg2
+                        v-for="fnb in fnbList"
+                        :items="fnb"
+                        v-bind:key="fnb.id"
+                        style="height: 40%;"
+                        pa-0
+                        ma-3
+                      >
+                        <v-card style="height: 100%; width: 100%;" flat :img="fnb.image_main" @click="selectCard(fnb)">
+                          <v-layout v-show="!fnb.isShow" fill-height fill-width justify-center align-center pa-0 style="background-color: rgba(0,0,0,0.5); color: white;">
+                            <v-card-title class="subheading font-weight-regular text-xs-center">{{ fnb.name }}</v-card-title>
+                          </v-layout>
+                          <v-layout v-show="fnb.isShow" column fill-height fill-width justify-start align-start pa-0 pl-2 pt-2 style="background-color: rgba(255,255,255,0.75); color: black;">
+                            <span class="body-2 font-weight-bold text-xs-left">{{ fnb.name }}</span>
+                            <span class="caption font-weight-regular text-xs-left">{{ fnb.summary }}</span>
+                            <span class="body-2 font-weight-medium text-xs-left">{{ fnb.description }}</span>
+                          </v-layout>
+                        </v-card>
+                      </v-flex>
                     </v-layout>
                   </v-tab-item>
                 </v-tabs>
@@ -228,6 +270,9 @@ export default {
     },
     featuredList() {
       return this.$store.state.featuredList
+    },
+    fnbList() {
+      return this.$store.state.fnbList
     }
   },
   data() {
@@ -257,8 +302,7 @@ export default {
       homeSection: {},
       sideMenu: [],
       page: 1,
-      limit: 2,
-      active_tab: 1
+      limit: 2
     }
   },
   mounted() {
@@ -272,8 +316,18 @@ export default {
     this.fetchWelcomePost(this.headers)
   },
   methods: {
+    async selectCard(card) {
+      if (!card.isShow){
+        card.isShow = true
+      } else {
+        card.isShow = false
+      }
+      this.$forceUpdate()
+      console.log(card.isShow)
+    },
     async loadSections(headers) {
       await this.$store.dispatch('fetchConfig', headers)
+
       console.log(this.config)
       let sections = []
       let contentSections = []
@@ -365,6 +419,16 @@ export default {
     async fetchMenuPost(headers) {
       await this.$store.dispatch('fetchMenuPost', headers)
       this.isLoading = false
+    },
+    async fetchFnbData(type) {
+      let queryParams = {
+        headers: this.headers,
+        type: type,
+        page: 1,
+        limit: 10
+      }
+
+      await this.$store.dispatch('fetchFnbList', queryParams) 
     }
   },
   watch: {
@@ -380,6 +444,7 @@ export default {
         await this.fetchProductPost(this.page, this.limit, this.headers)
       } else if (newIndex == 3) {
         this.isLoading = true
+        await this.fetchFnbData(1)
         await this.fetchMenuPost(this.headers)
       }
     }
@@ -453,6 +518,21 @@ html {
 .v-btn .v-btn__content .v-icon {
   color: #000;
 }
+.v-tabs {
+  height: 100%;
+}
+.v-tabs__bar {
+  height: 10%;
+}
+.v-tabs__wrapper {
+  overflow: hidden;
+  contain: content;
+  display: flex;
+  height: 100%;
+}
+.v-tabs__container--icons-and-text {
+  height: 100%;
+}
 .v-tabs__slider-wrapper, .minify {
   width: 83px !important;
 }
@@ -461,5 +541,14 @@ html {
 }
 .v-tabs__item, .minify {
   max-width: 83px;
+}
+.v-window, .tab-content {
+  height: 90%;
+}
+.v-window__container, .tab-content {
+  height: 100%;
+}
+.v-window-item, .tab-content {
+  height: 100%;
 }
 </style>
