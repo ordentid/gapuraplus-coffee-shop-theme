@@ -233,6 +233,67 @@
             </v-layout>
           </v-app>
         </template>
+        <template v-else-if="section.sectionName == 'contact'">
+          <v-layout v-if="!isLoading" column ma-0 pa-0 section-content style="background-color: #24232A">
+            <v-layout row ma-0 pa-0 justify-center align-center style="height: 50%; width: 100%; max-width: 100%; background-color: #A0A0A0;">
+              <v-layout pa-0 ma-0 justify-end align-center style="height: 100%; width: 50%;">
+                <div id="map" />
+              </v-layout>
+              <v-layout column pa-0 ma-0 justify-center align-start style="height: 100%; width: 50%">
+                <v-layout column pa-2 ma-0 justify-center align-center style="max-height: 90%; width: 80%; background-color: #FFFFFF; color: #000000;">
+                  <span class="title font-weight-regular text-xs-center">{{ location.value.name }}</span>
+                  <span class="subheading font-weight-light text-xs-center">{{ location.value.description }}</span>
+                </v-layout>
+              </v-layout>
+            </v-layout>
+            <v-layout row ma-0 pa-0 justify-center align-center style="height: 10%; width: 100%; max-width: 100%; color: #FFFFFF;">
+              <span class="body-2 font-weight-regular">Kirimkan email ke kami untuk pertanyaan lebih lanjut</span>
+              <v-btn :href="config.mailLink" color="#707070" style="color: #FFFFFF; border-radius: 10px;">Hubungi Kami</v-btn>
+            </v-layout>
+            <v-layout row ma-0 pa-0 pt-2 justify-center align-center style="height: 35%; width: 100%; max-width: 100%;">
+              <v-flex
+                xs4
+                pa-2
+                ma-0
+                fill-height
+              >
+                <v-layout column fill-height fill-width justify-start align-center style="color: #FFFFFF;">
+                  <span class="title font-weight-regular text-xs-center">Alamat</span>
+                  <span class="subheading font-weight-light text-xs-center mt-2">{{ address.value.addressStr }}</span>
+                </v-layout>
+              </v-flex>
+              <v-flex
+                xs4
+                pa-2
+                ma-0
+                fill-height
+              >
+                <v-layout column fill-height fill-width justify-start align-center style="color: #FFFFFF;">
+                  <span class="title font-weight-regular text-xs-center">Jam Operasional</span>
+                  <span class="subheading font-weight-light text-xs-center mt-2"></span>
+                </v-layout>
+              </v-flex>
+              <v-flex
+                xs4
+                pa-2
+                ma-0
+                fill-height
+              >
+                <v-layout column fill-height fill-width justify-start align-center style="color: #FFFFFF;">
+                  <span class="title font-weight-regular text-xs-center">Media Sosial</span>
+                  <v-layout row wrap fill-width justify-center align-start>
+                    <template v-for="(item, i) in socialMedia">
+                        <v-img :key="i" :src="item.value.icon_src" height="25px" width="25px" contain class="clickable ma-2"></v-img>
+                    </template>
+                  </v-layout>
+                </v-layout>
+              </v-flex>
+            </v-layout>
+            <v-layout pa-0 ma-0 justify-center align-center style="height: 5%; width: 100%; max-width: 100%; background-color: #1C1B20; color: #FFFFFF;">
+              <span class="caption font-weight-bold text-xs-center">Created by Ordent, Geared Up with Gapura</span>
+            </v-layout>
+          </v-layout>
+        </template>
       </ksvuefp-section>
     </ksvuefp>
   </v-layout>
@@ -240,6 +301,7 @@
 
 <script>
 import axios from 'axios'
+import maps from '~/utils/maps'
 
 export default {
   metaInfo: {
@@ -273,6 +335,39 @@ export default {
     },
     fnbList() {
       return this.$store.state.fnbList
+    },
+    location() {
+      let location = Object.assign({}, this.$store.state.location)
+      if (location.id == null){
+        let value = {
+          description: 'Default Location Description',
+          name: 'Default Location'
+        }
+        location.value = value
+      }
+
+      return location
+    },
+    address() {
+      let address = Object.assign({}, this.$store.state.address)
+      if (address.id == null){
+        let addressStr = 'Default Address, Default Subdistrict, Default District. Default Province. 11221'
+        let value = {
+          addressStr: addressStr
+        }
+        address.value = value
+      } else {
+        let addressStr = address.value.address + ', ' + address.value.subdistrict + ', ' + address.value.district + ', ' + address.value.province + '. ' + address.value.zipcode
+        let value = {
+          addressStr: addressStr
+        }
+        address.value = value
+      }
+
+      return address
+    },
+    socialMedia() {
+      return this.$store.state.socialMedia
     }
   },
   data() {
@@ -305,7 +400,7 @@ export default {
       limit: 2
     }
   },
-  mounted() {
+  async mounted() {
     let Velocity = require('velocity-animate')
     let hammerjs = require('hammerjs')
 
@@ -314,6 +409,9 @@ export default {
     
     this.loadSections(this.headers)
     this.fetchWelcomePost(this.headers)
+    if (this.maps == null){
+      const google = await maps()
+    }
   },
   methods: {
     async selectCard(card) {
@@ -323,12 +421,10 @@ export default {
         card.isShow = false
       }
       this.$forceUpdate()
-      console.log(card.isShow)
     },
     async loadSections(headers) {
       await this.$store.dispatch('fetchConfig', headers)
 
-      console.log(this.config)
       let sections = []
       let contentSections = []
       let sectionId = 0
@@ -429,6 +525,14 @@ export default {
       }
 
       await this.$store.dispatch('fetchFnbList', queryParams) 
+    },
+    async fetchContactData(headers) {
+      let request = {
+        headers: headers
+      }
+
+      await this.$store.dispatch('fetchContactData', request)
+      this.isLoading = false
     }
   },
   watch: {
@@ -446,6 +550,22 @@ export default {
         this.isLoading = true
         await this.fetchFnbData(1)
         await this.fetchMenuPost(this.headers)
+      } else if (newIndex == 4){
+        this.isLoading = true
+        await this.fetchContactData(this.headers)
+        this.$nextTick(function() {
+          try {
+            const coordinate = this.location.id != null ? this.location.value.location : {lat: -6.914744, lng: 107.6191}
+            const mapDiv = document.getElementById('map')
+            const map = new google.maps.Map(mapDiv, {zoom: 16, center: coordinate, mapTypeId: 'roadmap', disableDefaultUI: true})
+            const marker = new google.maps.Marker({position: coordinate, draggable: true, map: map})
+
+            this.map = map
+            this.marker = marker
+          }catch(error) {
+              console.log(error)
+          }
+        })
       }
     }
   }
@@ -550,5 +670,13 @@ html {
 }
 .v-window-item, .tab-content {
   height: 100%;
+}
+.clickable {
+  cursor: pointer;
+}
+#map {
+  height: 90%;
+  width: 80%;
+  background-color: #ffffff;
 }
 </style>

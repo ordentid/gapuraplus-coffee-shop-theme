@@ -43,7 +43,10 @@ export default function (Vue, { router, head, isClient, appOptions }) {
       menuPost: {},
       meta: {},
       featuredList: [],
-      fnbList: []
+      fnbList: [],
+      location: {},
+      address: {},
+      socialMedia: []
     },
     mutations: {
       setConfig(state, val) {
@@ -69,6 +72,15 @@ export default function (Vue, { router, head, isClient, appOptions }) {
       },
       setFnbList(state, val) {
         state.fnbList = val
+      },
+      setLocation(state, val) {
+        state.location = val
+      },
+      setAddress(state, val) {
+        state.address = val
+      },
+      setSocialMedia(state, val) {
+        state.socialMedia = val
       }
     },
     actions: {
@@ -206,79 +218,57 @@ export default function (Vue, { router, head, isClient, appOptions }) {
         let data = response.data.data
 
         if (data.length == 0){
-          data.push({
-            id: 1,
-            name: 'Default FnB 1',
-            summary: 'Default Summary 1',
-            image_main: 'https://img.etimg.com/thumb/msid-67055775,width-643,imgsize-709079,resizemode-4/coffeebeans.jpg',
-            description: 'Rp. 10K'
-          })
-          data.push({
-            id: 2,
-            name: 'Default FnB 2',
-            summary: 'Default Summary 2',
-            image_main: 'https://img.etimg.com/thumb/msid-67055775,width-643,imgsize-709079,resizemode-4/coffeebeans.jpg',
-            description: 'Rp. 10K'
-          })
-          data.push({
-            id: 3,
-            name: 'Default FnB 3',
-            summary: 'Default Summary 3',
-            image_main: 'https://img.etimg.com/thumb/msid-67055775,width-643,imgsize-709079,resizemode-4/coffeebeans.jpg',
-            description: 'Rp. 10K'
-          })
-          data.push({
-            id: 4,
-            name: 'Default FnB 4',
-            summary: 'Default Summary 4',
-            image_main: 'https://img.etimg.com/thumb/msid-67055775,width-643,imgsize-709079,resizemode-4/coffeebeans.jpg',
-            description: 'Rp. 10K'
-          })
-          data.push({
-            id: 5,
-            name: 'Default FnB 5',
-            summary: 'Default Summary 5',
-            image_main: 'https://img.etimg.com/thumb/msid-67055775,width-643,imgsize-709079,resizemode-4/coffeebeans.jpg',
-            description: 'Rp. 10K'
-          })
-          data.push({
-            id: 6,
-            name: 'Default FnB 6',
-            summary: 'Default Summary 6',
-            image_main: 'https://img.etimg.com/thumb/msid-67055775,width-643,imgsize-709079,resizemode-4/coffeebeans.jpg',
-            description: 'Rp. 10K'
-          })
-          data.push({
-            id: 7,
-            name: 'Default FnB 7',
-            summary: 'Default Summary 7',
-            image_main: 'https://img.etimg.com/thumb/msid-67055775,width-643,imgsize-709079,resizemode-4/coffeebeans.jpg',
-            description: 'Rp. 10K'
-          })
-          data.push({
-            id: 8,
-            name: 'Default FnB 8',
-            summary: 'Default Summary 8',
-            image_main: 'https://img.etimg.com/thumb/msid-67055775,width-643,imgsize-709079,resizemode-4/coffeebeans.jpg',
-            description: 'Rp. 10K'
-          })
-          data.push({
-            id: 9,
-            name: 'Default FnB 9',
-            summary: 'Default Summary 9',
-            image_main: 'https://img.etimg.com/thumb/msid-67055775,width-643,imgsize-709079,resizemode-4/coffeebeans.jpg',
-            description: 'Rp. 10K'
-          })
-          data.push({
-            id: 10,
-            name: 'Default FnB 10',
-            summary: 'Default Summary 10',
-            image_main: 'https://img.etimg.com/thumb/msid-67055775,width-643,imgsize-709079,resizemode-4/coffeebeans.jpg',
-            description: 'Rp. 10K'
-          })
+          for (let i = 1; i <= 10; i++){
+            data.push({
+              id: i,
+              name: 'Default FnB ' + i,
+              summary: 'Default Summary ' + i,
+              image_main: 'https://img.etimg.com/thumb/msid-67055775,width-643,imgsize-709079,resizemode-4/coffeebeans.jpg',
+              description: 'Rp. 10K'
+            })
+          }
         }
         
         commit('setFnbList', data)
+      },
+      async fetchContactData({commit}, params) {
+        let headers = params.headers
+        let url = apiUrl + '/api/contact'
+
+        let response = await axios.get(url, {headers: headers})
+        let contactList = response.data.data
+        let location = {}
+        let address = {}
+        let socialMedia = []
+        contactList.forEach(element => {
+          if (element.type == 'location'){
+            location = element
+          } else if (element.type == 'address'){
+            address = element
+          } else if (element.type == 'social_media'){
+            switch(element.value.name) {
+              case 'facebook':
+                element.value.icon_src = './images/facebook-icon.png'
+                break
+              case 'instagram':
+                element.value.icon_src = './images/instagram-icon.png'
+                break
+              case 'twitter':
+                element.value.icon_src = './images/twitter-icon.png'
+                break
+              case 'linkedin':
+                element.value.icon_src = './images/linkedin-icon.png'
+                break
+              default:
+                console.log('No Data')
+            }
+            socialMedia.push(element)
+          }
+        })
+
+        commit('setLocation', location)
+        commit('setAddress', address)
+        commit('setSocialMedia', socialMedia)
       }
     }
   })
