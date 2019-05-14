@@ -270,7 +270,7 @@
               >
                 <v-layout column fill-height fill-width justify-start align-center style="color: #FFFFFF;">
                   <span class="title font-weight-regular text-xs-center">Jam Operasional</span>
-                  <span class="subheading font-weight-light text-xs-center mt-2"></span>
+                  <span class="subheading font-weight-light text-xs-center mt-2" v-html="operationalHour.operationalHourStrView"></span>
                 </v-layout>
               </v-flex>
               <v-flex
@@ -367,7 +367,58 @@ export default {
       return address
     },
     socialMedia() {
-      return this.$store.state.socialMedia
+      let socialMedia = Object.assign([], this.$store.state.socialMedia)
+
+      socialMedia.forEach(element => {
+        switch(element.value.name) {
+          case 'facebook':
+            element.value.icon_src = './images/facebook-icon.png'
+            break
+          case 'instagram':
+            element.value.icon_src = './images/instagram-icon.png'
+            break
+          case 'twitter':
+            element.value.icon_src = './images/twitter-icon.png'
+            break
+          case 'linkedin':
+            element.value.icon_src = './images/linkedin-icon.png'
+            break
+          default:
+            console.log('No Data')
+        }
+      })
+      return socialMedia
+    },
+    operationalHour() {
+      let operationalHour = Object.assign([], this.$store.state.operationalHours)
+      let operationalHourStrView = ''
+
+      operationalHour.forEach(element => {
+        element.value.forEach(elementValue => {
+          operationalHourStrView += elementValue.open_hour + ' - ' + elementValue.close_hour + ' '
+
+          let firstFlag = true
+          elementValue.days.forEach((elementChild, index) => {
+              if (elementChild.value){
+                  if (firstFlag){
+                      operationalHourStrView += elementChild.text
+                      firstFlag = false
+                  }
+
+                  if (index < (elementValue.days.length - 1)){
+                      if (!elementValue.days[index + 1].value){
+                          operationalHourStrView += '-' + elementChild.text + ' '
+                          firstFlag = true
+                      }
+                  }
+              }
+          })
+          operationalHourStrView += '<br/>'
+        })
+      })
+
+      operationalHour.operationalHourStrView = operationalHourStrView
+      return operationalHour
     }
   },
   data() {

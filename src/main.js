@@ -46,7 +46,8 @@ export default function (Vue, { router, head, isClient, appOptions }) {
       fnbList: [],
       location: {},
       address: {},
-      socialMedia: []
+      socialMedia: [],
+      operationalHours: []
     },
     mutations: {
       setConfig(state, val) {
@@ -81,6 +82,9 @@ export default function (Vue, { router, head, isClient, appOptions }) {
       },
       setSocialMedia(state, val) {
         state.socialMedia = val
+      },
+      setOperationalHours(state, val) {
+        state.operationalHours = val
       }
     },
     actions: {
@@ -240,35 +244,23 @@ export default function (Vue, { router, head, isClient, appOptions }) {
         let location = {}
         let address = {}
         let socialMedia = []
+        let operationalHour = []
         contactList.forEach(element => {
           if (element.type == 'location'){
             location = element
           } else if (element.type == 'address'){
             address = element
           } else if (element.type == 'social_media'){
-            switch(element.value.name) {
-              case 'facebook':
-                element.value.icon_src = './images/facebook-icon.png'
-                break
-              case 'instagram':
-                element.value.icon_src = './images/instagram-icon.png'
-                break
-              case 'twitter':
-                element.value.icon_src = './images/twitter-icon.png'
-                break
-              case 'linkedin':
-                element.value.icon_src = './images/linkedin-icon.png'
-                break
-              default:
-                console.log('No Data')
-            }
             socialMedia.push(element)
+          } else if (element.type == 'operational_hour'){
+            operationalHour.push(element)
           }
         })
 
         commit('setLocation', location)
         commit('setAddress', address)
         commit('setSocialMedia', socialMedia)
+        commit('setOperationalHours', operationalHour)
       }
     }
   })
