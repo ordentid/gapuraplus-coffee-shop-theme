@@ -54,10 +54,10 @@
         app
         flat
         class="hidden-sm-and-up"
-        style="height: 15%;"
+        style="height: 10%;"
       >
         <v-layout justify-left align-center style="height: 100%; width: 100%;">
-          <v-toolbar-side-icon @click="drawer = !drawer" class="hover hidden-sm-and-up" style="color: whitesmoke;"/>
+          <v-toolbar-side-icon @click="drawer = !drawer" class="hover hidden-sm-and-up default-color"/>
           <template v-if="homeSection.useIcon">
             <v-btn
               icon
@@ -117,7 +117,7 @@
             <v-layout column wrap pa-0 style="height: 65%; width: 100%; max-width: 100%;">
               <v-carousel hide-delimiters dark @click.native="carouselClick">
                 <v-carousel-item>
-                  <v-layout row fill-height justify-center align-start style="width: 100%; max-width: 100%; padding-top: 60px;">
+                  <v-layout row fill-height justify-center align-center pa-0 style="width: 100%; max-width: 100%;">
                     <v-flex
                       xs5
                       sm5
@@ -128,7 +128,7 @@
                       v-bind:key="featured.id"
                       pa-0
                       ma-2
-                      style="height: 50%;"
+                      style="height: 80%;"
                     >
                       <v-card style="height: 100%; width: 100%;" flat :img="featured.image_main">
                         <v-card-text style="height: 50%; width: 100%; background_color: white;">
@@ -158,19 +158,19 @@
                     <span class="body-1 text-xs-center pa-3" v-html="menuPost.html_content"></span>
                   </v-layout>
               </v-parallax>
-              <v-layout column wrap pa-0 style="height: 70%; width: 100%; max-width: 100%;">
+              <v-layout column wrap pa-0 style="height: 70%; max-height: 70%; width: 100%; max-width: 100%;">
                 <v-tabs
                   color="white"
                   centered
                   dark
                   icons-and-text
                 >
-                  <v-tabs-slider color="blue" />
-                  <v-tab href="#food_tab" class="minify caption resize" style="color: black;" @click="fetchFnbData(1)">
+                  <v-tabs-slider color="blue" class="minify"/>
+                  <v-tab href="#food_tab" class="minify caption resize" style="color: black;" @click="fetchMenuData(1, 1, menuLimit)">
                     Makanan
                     <v-icon small color="black">fastfood</v-icon>
                   </v-tab>
-                  <v-tab href="#drink_tab" class="minify caption ml-1 resize" style="color: black;" @click="fetchFnbData(2)">
+                  <v-tab href="#drink_tab" class="minify caption ml-1 resize" style="color: black;" @click="fetchMenuData(2, 1, menuLimit)">
                     Minuman
                     <v-icon small color="black">local_drink</v-icon>
                   </v-tab>
@@ -186,7 +186,7 @@
                         v-bind:key="fnb.id"
                         style="height: 40%;"
                         pa-0
-                        ma-3
+                        ma-2
                       >
                         <v-card style="height: 100%; width: 100%;" flat :img="fnb.image_main" @click="selectCard(fnb)">
                           <v-layout v-show="!fnb.isShow" fill-height fill-width justify-center align-center pa-0 style="background-color: rgba(0,0,0,0.5); color: white;">
@@ -231,10 +231,112 @@
                 </v-tabs>
               </v-layout>
             </v-layout>
+            <v-layout wrap column ma-0 pa-0 section-content-mobile hidden-sm-and-up style="background-color: #FDFFFD">
+              <v-parallax
+                dark
+                :src="menuPost.cover_image"
+                class="ma-0 pa-0 product-parallax"
+                style="height: 30%;">
+                  <v-layout column wrap ustify-center align-center pa-0 style="height: 100%; max-height: 100%; width: 100%; max-width: 100%; color: #000000;">
+                    <span class="display-1 text-xs-center font-weight-strong pt-3">{{ menuPost.title}}</span>
+                    <span class="body-1 text-xs-center pa-3" v-html="menuPost.html_content"></span>
+                  </v-layout>
+              </v-parallax>
+              <v-layout column wrap pa-0 style="height: 70%; max-height:70%; width: 100%; max-width: 100%;">
+                <v-tabs
+                  color="white"
+                  centered
+                  dark
+                  icons-and-text
+                >
+                  <v-tabs-slider color="blue" class="mobile"/>
+                  <v-tab href="#food_tab" class="caption resize mobile" style="color: black; min-width: 50%;" @click="fetchMenuData(1, 1, menuLimit)">
+                    <v-layout row wrap pa-0 pl-2 align-center style="width: 100%; height: 100%;">
+                      <v-icon medium color="black">fastfood</v-icon>
+                      <span class="subheading font-weight-medium">Makanan</span>
+                    </v-layout>
+                  </v-tab>
+                  <v-tab href="#drink_tab" class="caption resize mobile" style="color: black; min-width: 50%;" @click="fetchMenuData(2, 1, menuLimit)">
+                    <v-layout row wrap pa-0 pl-2 align-center style="width: 100%; height: 100%;">
+                      <v-icon medium color="black">local_drink</v-icon>
+                      <span class="subheading font-weight-medium">Minuman</span>
+                    </v-layout>
+                  </v-tab>
+                  <v-tab-item :value="'food_tab'">
+                    <v-carousel hide-delimiters dark class="layout wrap fill-width pa-0" style="height: 100%;">
+                      <v-carousel-item class="layout wrap fill-width pa-0 menu-content">
+                        <template v-if="!tabLoading">
+                          <v-layout column wrap class="tab-content-mobile pa-0 justify-center align-start" style="height: 100%; width: 100%; max-width: 100%;">
+                            <v-flex
+                              xs4
+                              v-for="fnb in fnbList"
+                              :items="fnb"
+                              v-bind:key="fnb.id"
+                              pa-0
+                              style="width: 100%; height: 100%;"
+                            >
+                              <v-layout row wrap fill-height fill-width>
+                                <v-layout wrap justify-center align-center pa-0 ma-0 style="height: 100%; width: 30%;">
+                                  <v-img contains max-height="100%" max-width="100%" :src="fnb.image_main"></v-img>
+                                </v-layout>
+                                <v-layout column wrap justify-center align-start style="height: 100%; width: 70%;">
+                                  <span class="body-2 font-weight-bold text-xs-left">{{ fnb.name }}</span>
+                                  <span class="caption font-weight-regular text-xs-left">{{ fnb.summary }}</span>
+                                  <span class="body-2 font-weight-medium text-xs-left">{{ fnb.sell_price }}</span>
+                                </v-layout>
+                              </v-layout>
+                            </v-flex>
+                        </v-layout>
+                        </template>
+                          <template v-else>
+                            <v-layout column wrap class="tab-content-mobile pa-0 justify-center align-center" style="height: 100%; width: 100%; max-width: 100%;">
+                              <v-progress-circular indeterminate color="grey" style="height: 50%; width: 50%;"></v-progress-circular>
+                            </v-layout>
+                          </template>
+                      </v-carousel-item>
+                    </v-carousel>
+                  </v-tab-item>
+                  <v-tab-item :value="'drink_tab'">
+                    <v-carousel hide-delimiters dark class="layout wrap fill-width pa-0" style="height: 100%;">
+                      <v-carousel-item class="layout wrap fill-width pa-0 menu-content">
+                        <template v-if="!tabLoading">
+                          <v-layout column wrap class="tab-content-mobile pa-0 justify-start align-start" style="height: 100%; width: 100%; max-width: 100%;">
+                            <v-flex
+                              xs4
+                              v-for="fnb in fnbList"
+                              :items="fnb"
+                              v-bind:key="fnb.id"
+                              pa-0
+                              style="width: 100%; height: 100%;"
+                            >
+                              <v-layout row wrap fill-height fill-width>
+                                <v-layout wrap justify-center align-center pa-0 ma-0 style="height: 100%; width: 30%;">
+                                  <v-img contains max-height="100%" max-width="100%" :src="fnb.image_main"></v-img>
+                                </v-layout>
+                                <v-layout column wrap justify-center align-start style="height: 100%; width: 70%;">
+                                  <span class="body-2 font-weight-bold text-xs-left">{{ fnb.name }}</span>
+                                  <span class="caption font-weight-regular text-xs-left">{{ fnb.summary }}</span>
+                                  <span class="body-2 font-weight-medium text-xs-left">{{ fnb.sell_price }}</span>
+                                </v-layout>
+                              </v-layout>
+                            </v-flex>
+                        </v-layout>
+                        </template>
+                        <template v-else>
+                          <v-layout column wrap class="tab-content-mobile pa-0 justify-center align-center" style="height: 100%; width: 100%; max-width: 100%;">
+                            <v-progress-circular indeterminate color="grey" style="height: 50%; width: 50%;"></v-progress-circular>
+                          </v-layout>
+                        </template>
+                      </v-carousel-item>
+                    </v-carousel>
+                  </v-tab-item>
+                </v-tabs>
+              </v-layout>
+            </v-layout>
           </v-app>
         </template>
         <template v-else-if="section.sectionName == 'contact'">
-          <v-layout v-if="!isLoading" column ma-0 pa-0 section-content style="background-color: #24232A">
+          <v-layout v-if="!isLoading" column ma-0 pa-0 section-content hidden-sm-and-down style="background-color: #24232A">
             <v-layout row ma-0 pa-0 justify-center align-center style="height: 50%; width: 100%; max-width: 100%; background-color: #A0A0A0;">
               <v-layout pa-0 ma-0 justify-end align-center style="height: 100%; width: 50%;">
                 <div id="map" />
@@ -293,6 +395,62 @@
               <span class="caption font-weight-bold text-xs-center">Created by Ordent, Geared Up with Gapura</span>
             </v-layout>
           </v-layout>
+          <v-layout v-if="!isLoading" column ma-0 pa-0 section-content-mobile hidden-sm-and-up style="background-color: #24232A">
+            <v-layout column ma-0 pa-0 justify-center align-center style="height: 40%; width: 100%; max-width: 100%; background-color: #A0A0A0;">
+              <v-layout pa-0 ma-0 justify-end align-center style="height: 50%; width: 100%;">
+                <div id="map-mobile" style="height: 100%; width: 100%;"/>
+              </v-layout>
+              <v-layout column pa-0 ma-0 justify-center align-start style="height: 50%; width: 100%">
+                <v-layout column pa-2 ma-0 justify-center align-center style="height100%; width: 100%; background-color: #FFFFFF; color: #000000;">
+                  <span class="title font-weight-regular text-xs-center">{{ location.value.name }}</span>
+                  <span class="subheading font-weight-light text-xs-center">{{ location.value.description }}</span>
+                </v-layout>
+              </v-layout>
+            </v-layout>
+            <v-layout column wrap ma-0 pa-0 justify-center align-center style="height: 10%; width: 100%; max-width: 100%; color: #FFFFFF;">
+              <span class="subheading font-weight-regular px-2">Kirimkan email ke kami untuk pertanyaan lebih lanjut</span>
+              <v-btn :href="config.mailLink" color="#707070" style="color: #FFFFFF; height: 40%; border-radius: 10px;">Hubungi Kami</v-btn>
+            </v-layout>
+            <v-layout column ma-0 pa-0 pt-2 justify-center align-center style="height: 50%; width: 100%; max-width: 100%;">
+              <v-flex
+                xs4
+                pa-2
+                ma-0
+              >
+                <v-layout column fill-height fill-width justify-start align-center style="color: #FFFFFF;">
+                  <span class="title font-weight-regular text-xs-center">Alamat</span>
+                  <span class="subheading font-weight-light text-xs-center mt-2">{{ address.value.addressStr }}</span>
+                </v-layout>
+              </v-flex>
+              <v-flex
+                xs4
+                pa-2
+                ma-0
+              >
+                <v-layout column fill-height fill-width justify-start align-center style="color: #FFFFFF;">
+                  <span class="title font-weight-regular text-xs-center">Jam Operasional</span>
+                  <span class="subheading font-weight-light text-xs-center mt-2" v-html="operationalHour.operationalHourStrView"></span>
+                </v-layout>
+              </v-flex>
+              <v-flex
+                xs4
+                pa-2
+                ma-0
+              >
+                <v-layout column fill-height fill-width justify-start align-center style="color: #FFFFFF;">
+                  <span class="title font-weight-regular text-xs-center">Media Sosial</span>
+                  <v-layout row wrap fill-width justify-center align-start>
+                    <template v-for="(item, i) in socialMedia">
+                        <v-img :key="i" :src="item.value.icon_src" @click="goToPage(item.value.value)" height="25px" width="25px" contain class="ma-2"></v-img>
+                    </template>
+                  </v-layout>
+                </v-layout>
+              </v-flex>
+            </v-layout>
+            <v-layout pa-0 ma-0 justify-center align-center style="height: 5%; width: 100%; max-width: 100%; background-color: #1C1B20; color: #FFFFFF;">
+              <span class="caption font-weight-bold text-xs-center">Created by Ordent, Geared Up with Gapura</span>
+            </v-layout>
+          </v-layout>
         </template>
       </ksvuefp-section>
     </ksvuefp>
@@ -311,6 +469,17 @@ export default {
   computed: {
     currentIndex() {
       return this.$ksvuefp.currentIndex
+    },
+    menuLimit() {
+      let limit = 0
+      console.log(this.$vuetify.breakpoint.name)
+      if (this.$vuetify.breakpoint.name == 'xs'){
+        limit = 3
+      } else {
+        limit = 10
+      }
+
+      return limit
     },
     config() {
       return this.$store.state.config
@@ -441,6 +610,7 @@ export default {
       drawer: false,
       miniVariant: false,
       isLoading: true,
+      tabLoading: false,
       contactList: [],
       productList: [],
       menuSections: [],
@@ -465,6 +635,10 @@ export default {
     }
   },
   methods: {
+    goToPage(urlLink) {
+      console.log(urlLink)
+      window.open(urlLink, '_blank')
+    },
     async selectCard(card) {
       if (!card.isShow){
         card.isShow = true
@@ -567,15 +741,18 @@ export default {
       await this.$store.dispatch('fetchMenuPost', headers)
       this.isLoading = false
     },
-    async fetchFnbData(type) {
+    async fetchMenuData(type, page, limit) {
+      this.tabLoading = true
+
       let queryParams = {
         headers: this.headers,
         type: type,
-        page: 1,
-        limit: 10
+        page: page,
+        limit: limit
       }
 
-      await this.$store.dispatch('fetchFnbList', queryParams) 
+      await this.$store.dispatch('fetchFnbList', queryParams)
+      this.tabLoading = false
     },
     async fetchContactData(headers) {
       let request = {
@@ -599,8 +776,9 @@ export default {
         await this.fetchProductPost(this.page, this.limit, this.headers)
       } else if (newIndex == 3) {
         this.isLoading = true
-        await this.fetchFnbData(1)
+        this.tabLoading = true
         await this.fetchMenuPost(this.headers)
+        await this.fetchMenuData(1, 1, this.menuLimit)
       } else if (newIndex == 4){
         this.isLoading = true
         await this.fetchContactData(this.headers)
@@ -608,8 +786,11 @@ export default {
           try {
             const coordinate = this.location.id != null ? this.location.value.location : {lat: -6.914744, lng: 107.6191}
             const mapDiv = document.getElementById('map')
+            const mobileMapDiv = document.getElementById('map-mobile')
             const map = new google.maps.Map(mapDiv, {zoom: 16, center: coordinate, mapTypeId: 'roadmap', disableDefaultUI: true})
+            const mobileMap = new google.maps.Map(mobileMapDiv, {zoom: 16, center: coordinate, mapTypeId: 'roadmap', disableDefaultUI: true})
             const marker = new google.maps.Marker({position: coordinate, draggable: true, map: map})
+            const mobileMarker = new google.maps.Marker({position: coordinate, draggable: true, map: mobileMap})
 
             this.map = map
             this.marker = marker
@@ -679,6 +860,13 @@ html {
   position: absolute; 
   bottom: 0;
 }
+.section-content-mobile {
+  height: 90%; 
+  max-width: 100%; 
+  width: 100%; 
+  position: absolute; 
+  bottom: 0;
+}
 .cover-image-full {
   height: 100%;
   width: 100%;
@@ -707,11 +895,18 @@ html {
 .v-tabs__slider-wrapper, .minify {
   width: 83px !important;
 }
+.v-tabs__slider-wrapper, .mobile {
+  min-width: 50%;
+}
 .v-tabs__container--icons-and-text .v-tabs__div, .resize {
   min-width: 83px;
 }
 .v-tabs__item, .minify {
   max-width: 83px;
+}
+.v-tabs__item, .mobile {
+  max-width: 100%;
+  padding: 0 0;
 }
 .v-window, .tab-content {
   height: 90%;
@@ -721,6 +916,18 @@ html {
 }
 .v-window-item, .tab-content {
   height: 100%;
+}
+.v-window, .tab-content-mobile {
+  width: 100%;
+}
+.v-window__container, .tab-content-mobile {
+  width: 100%;
+}
+.v-window-item, .tab-content-mobile {
+  width: 100%;
+}
+.v-carousel__item, .menu-content {
+  height: 100% !important;
 }
 .clickable {
   cursor: pointer;

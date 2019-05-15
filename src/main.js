@@ -204,7 +204,7 @@ export default function (Vue, { router, head, isClient, appOptions }) {
             commit('setMeta', {
               page: 1,
               perPage: 2,
-              total: 0,
+              total: 2,
             })
           }
         }catch(error) {
@@ -220,9 +220,10 @@ export default function (Vue, { router, head, isClient, appOptions }) {
 
         let response = await axios.get(url, {headers: headers})        
         let data = response.data.data
+        let meta = response.data.meta
 
         if (data.length == 0){
-          for (let i = 1; i <= 10; i++){
+          for (let i = 1; i <= limit; i++){
             data.push({
               id: i,
               name: 'Default FnB ' + i,
@@ -231,9 +232,16 @@ export default function (Vue, { router, head, isClient, appOptions }) {
               description: 'Rp. 10K'
             })
           }
+
+          meta = {
+            page: page,
+            perPage: limit,
+            total: limit,
+          }
         }
         
         commit('setFnbList', data)
+        commit('setMeta', meta)
       },
       async fetchContactData({commit}, params) {
         let headers = params.headers
