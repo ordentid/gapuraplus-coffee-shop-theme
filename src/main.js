@@ -13,9 +13,6 @@ export default function (Vue, { router, head, isClient, appOptions }) {
   let apiUrl = process.env.GRIDSOME_API_URL
 
   // Set default layout as a global component
-  if (process.isClient){
-    const maps = require('~/utils/maps')
-    }
 
   head.link.push({
     rel: 'stylesheet',

@@ -703,6 +703,11 @@ export default {
     
     this.loadSections(this.headers)
     this.fetchWelcomePost(this.headers)
+
+    if (process.isClient){
+      const maps = require('~/utils/maps').default
+      await maps()
+    }
   },
   methods: {
     goToPage(urlLink) {
@@ -875,6 +880,7 @@ export default {
         await this.fetchContactData(this.headers)
         this.$nextTick(function() {
           try {
+            console.log(google)
             const coordinate = this.location.id != null ? this.location.value.location : {lat: -6.914744, lng: 107.6191}
             const mapDiv = document.getElementById('map')
             const mobileMapDiv = document.getElementById('map-mobile')
