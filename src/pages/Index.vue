@@ -79,7 +79,29 @@
         :key="section.id"
       >
         <template v-if="section.sectionName == 'home'">
-          <v-layout column ma-0 pa-0 justify-center align-center section-content style="background-color: #9EA1A1;">
+          <v-layout column ma-0 pa-0 justify-center align-center section-content hidden-sm-and-down style="background-color: #9EA1A1;">
+            <v-parallax
+              dark
+              :src="welcomePost.cover_image"
+              class="cover-image-full hidden-sm-and-down"
+              height="100%">
+                <v-layout column wrap justify-center align-center>
+                  <span class="display-3 font-weight-strong mb-5 text-xs-center">{{ welcomePost.title}}</span>
+                  <span class="subheading text-xs-center" v-html="welcomePost.html_content" />
+                </v-layout>
+            </v-parallax>
+            <v-parallax
+              dark
+              :src="welcomePost.cover_image"
+              class="cover-image-full hidden-sm-and-up"
+              height="100%">
+                <v-layout column wrap justify-center align-center>
+                  <span class="display-1 font-weight-strong mb-5 text-xs-center text-xs-center">{{ welcomePost.title}}</span>
+                  <span class="subheading text-xs-center" v-html="welcomePost.html_content" />
+                </v-layout>
+            </v-parallax>
+          </v-layout>
+          <v-layout column ma-0 pa-0 justify-center align-center section-content-mobile hidden-sm-and-up style="background-color: #9EA1A1;">
             <v-parallax
               dark
               :src="welcomePost.cover_image"
@@ -115,7 +137,7 @@
                 </v-layout>
             </v-parallax>
             <v-layout column wrap pa-0 style="height: 65%; width: 100%; max-width: 100%;">
-              <v-carousel hide-delimiters dark @click.native="carouselClick">
+              <v-carousel hide-delimiters dark @click.native="productCarouselClick">
                 <v-carousel-item>
                   <v-layout row fill-height justify-center align-center pa-0 style="width: 100%; max-width: 100%;">
                     <v-flex
@@ -140,6 +162,52 @@
                       </v-card>
                     </v-flex>
                   </v-layout>
+                </v-carousel-item>
+              </v-carousel>
+            </v-layout>
+          </v-layout>
+          <v-layout column ma-0 pa-0 section-content-mobile hidden-sm-and-up style="background-color: #FDFFFD">
+            <v-parallax
+              dark
+              :src="productPost.cover_image"
+              class="ma-0 pa-0 product-parallax"
+              style="height: 35%;">
+                <v-layout column wrap justify-start align-start pa-0 style="height: 100%; width: 100%; max-width: 100%; color: #000000;">
+                  <span class="display-1 px-3 pt-3 font-weight-strong">{{ productPost.title}}</span>
+                  <span class="body-1 pa-3" v-html="productPost.html_content"></span>
+                </v-layout>
+            </v-parallax>
+            <v-layout column wrap pa-0 style="height: 65%; width: 100%; max-width: 100%;">
+              <v-carousel hide-delimiters dark @click.native="productCarouselClick">
+                <v-carousel-item>
+                  <template v-if="!carouselLoading">
+                    <v-layout row fill-height justify-center align-center pa-0 style="width: 100%; max-width: 100%;">
+                      <v-flex
+                        xs9
+                        v-for="featured in featuredList"
+                        :items="featured"
+                        v-bind:key="featured.id"
+                        pa-0
+                        ma-2
+                        style="height: 80%;"
+                      >
+                        <v-card style="height: 100%; width: 100%;">
+                          <v-img :src="featured.image_main" contains height="60%"/>
+                          <v-card-text style="height: 40%; width: 100%; background_color: white;">
+                            <v-layout column wrap fill-width fill-height justify-start align-start pa-0>
+                              <span class="title font-weight-regular mb-2">{{ featured.name }}</span>
+                              <span class="subheading font-weight-light mb-2 text-xs-center">{{ featured.summary }}</span>
+                            </v-layout>
+                          </v-card-text>
+                        </v-card>
+                      </v-flex>
+                    </v-layout>
+                  </template>
+                  <template v-else>
+                    <v-layout column wrap class="tab-content-mobile pa-0 justify-center align-center" style="height: 100%; width: 100%; max-width: 100%;">
+                      <v-progress-circular indeterminate color="grey" style="height: 50%; width: 50%;"></v-progress-circular>
+                    </v-layout>
+                  </template>
                 </v-carousel-item>
               </v-carousel>
             </v-layout>
@@ -263,9 +331,9 @@
                     </v-layout>
                   </v-tab>
                   <v-tab-item :value="'food_tab'">
-                    <v-carousel hide-delimiters dark class="layout wrap fill-width pa-0" style="height: 100%;">
+                    <v-carousel hide-delimiters dark class="layout wrap fill-width pa-0" style="height: 100%;" @click.native="foodCarouselClick">
                       <v-carousel-item class="layout wrap fill-width pa-0 menu-content">
-                        <template v-if="!tabLoading">
+                        <template v-if="!carouselLoading">
                           <v-layout column wrap class="tab-content-mobile pa-0 justify-center align-start" style="height: 100%; width: 100%; max-width: 100%;">
                             <v-flex
                               xs4
@@ -297,9 +365,9 @@
                     </v-carousel>
                   </v-tab-item>
                   <v-tab-item :value="'drink_tab'">
-                    <v-carousel hide-delimiters dark class="layout wrap fill-width pa-0" style="height: 100%;">
+                    <v-carousel hide-delimiters dark class="layout wrap fill-width pa-0" style="height: 100%;" @click.native="drinkCarouselClick">
                       <v-carousel-item class="layout wrap fill-width pa-0 menu-content">
-                        <template v-if="!tabLoading">
+                        <template v-if="!carouselLoading">
                           <v-layout column wrap class="tab-content-mobile pa-0 justify-start align-start" style="height: 100%; width: 100%; max-width: 100%;">
                             <v-flex
                               xs4
@@ -463,7 +531,7 @@ import maps from '~/utils/maps'
 
 export default {
   metaInfo: {
-    title: process.env.GRISOME_SITE_TITLE,
+    title: process.env.GRIDSOME_SITE_TITLE,
     sections: [],
   },
   computed: {
@@ -472,13 +540,20 @@ export default {
     },
     menuLimit() {
       let limit = 0
-      console.log(this.$vuetify.breakpoint.name)
       if (this.$vuetify.breakpoint.name == 'xs'){
         limit = 3
       } else {
         limit = 10
       }
-
+      return limit
+    },
+    productLimit() {
+      let limit = 0
+      if (this.$vuetify.breakpoint.name == 'xs'){
+        limit = 1
+      } else {
+        limit = 2
+      }
       return limit
     },
     config() {
@@ -610,7 +685,7 @@ export default {
       drawer: false,
       miniVariant: false,
       isLoading: true,
-      tabLoading: false,
+      carouselLoading: false,
       contactList: [],
       productList: [],
       menuSections: [],
@@ -618,7 +693,6 @@ export default {
       homeSection: {},
       sideMenu: [],
       page: 1,
-      limit: 2
     }
   },
   async mounted() {
@@ -669,19 +743,9 @@ export default {
         sectionId++
       }
 
-      if (config.use_profiles){
-        sections.push({
-          id: 2,
-          sectionName: 'profile',
-          sectionMenu: config.profile_menu,
-          sectionId: sectionId,
-        })
-        sectionId++
-      }
-
       if (config.use_products){
         sections.push({
-          id: 3,
+          id: 2,
           sectionName: 'product',
           sectionMenu: config.product_menu,
           sectionId: sectionId,
@@ -691,7 +755,7 @@ export default {
 
       if (config.use_food){
         sections.push({
-          id: 4,
+          id: 3,
           sectionName: 'food',
           sectionMenu: config.food_menu,
           sectionId: sectionId,
@@ -701,7 +765,7 @@ export default {
 
       if (config.use_contacts){
         sections.push({
-          id: 5,
+          id: 4,
           sectionName: 'contact',
           sectionMenu: config.contact_menu,
           sectionId: sectionId,
@@ -712,37 +776,70 @@ export default {
       this.menuSections = sections
       this.contentSections = contentSections.concat.apply(contentSections, sections)
     },
-    async carouselClick(param) {
+    async productCarouselClick(param) {
       let halfScreen = Math.floor(screen.width / 2)
-      if (param.screenX > halfScreen){
-        this.page++
+      if (param.clientX > halfScreen){
+        if (this.page < this.meta.lastPage){
+          this.page++
+          await this.fetchProductData(this.page, this.productLimit, this.headers)
+        }
       } else {
-        this.page--
+        if (this.page > 1){
+          this.page--
+          await this.fetchProductData(this.page, this.productLimit, this.headers)
+        }
+      }
+    },
+    async foodCarouselClick(param) {
+      let halfScreen = Math.floor(screen.width / 2)
+      if (param.clientX > halfScreen){
+        if (this.page < this.meta.lastPage){
+          this.page++
+          await this.fetchMenuData(1, this.page, this.menuLimit)
+        }
+      } else {
+        if (this.page > 1){
+          this.page--
+          await this.fetchMenuData(1, this.page, this.menuLimit)
+        }
+      }
+    },
+    async drinkCarouselClick(param) {
+      let halfScreen = Math.floor(screen.width / 2)
+      if (param.clientX > halfScreen){
+        if (this.page < this.meta.lastPage){
+          this.page++
+          await this.fetchMenuData(2, this.page, this.menuLimit)
+        }
+      } else {
+        if (this.page > 1){
+          this.page--
+          await this.fetchMenuData(2, this.page, this.menuLimit)
+        }
       }
     },
     async fetchWelcomePost(headers) {
       await this.$store.dispatch('fetchWelcomePost', headers)
       this.isLoading = false
     },
-    async fetchProfilePost(headers) {
-      await this.$store.dispatch('fetchProfilePost', headers)
+    async fetchProductPost(headers) {
+      await this.$store.dispatch('fetchProductPost', headers)
       this.isLoading = false
     },
-    async fetchProductPost(page, limit, headers) {
-      await this.$store.dispatch('fetchProductPost', headers)
+    async fetchProductData(page, limit, headers) {
       await this.$store.dispatch('fetchFeaturedList', {
         page: page,
         limit: limit,
         headers: headers
       })
-      this.isLoading = false
+      this.carouselLoading = false
     },
     async fetchMenuPost(headers) {
       await this.$store.dispatch('fetchMenuPost', headers)
       this.isLoading = false
     },
     async fetchMenuData(type, page, limit) {
-      this.tabLoading = true
+      this.carouselLoading = true
 
       let queryParams = {
         headers: this.headers,
@@ -752,7 +849,7 @@ export default {
       }
 
       await this.$store.dispatch('fetchFnbList', queryParams)
-      this.tabLoading = false
+      this.carouselLoading = false
     },
     async fetchContactData(headers) {
       let request = {
@@ -770,16 +867,15 @@ export default {
         await this.fetchWelcomePost(this.headers)
       } else if (newIndex == 1) {
         this.isLoading = true
-        await this.fetchProfilePost(this.headers)
+        this.carouselLoading = true
+        await this.fetchProductPost(this.headers)
+        await this.fetchProductData(1, this.productLimit, this.headers)
       } else if (newIndex == 2) {
         this.isLoading = true
-        await this.fetchProductPost(this.page, this.limit, this.headers)
-      } else if (newIndex == 3) {
-        this.isLoading = true
-        this.tabLoading = true
+        this.carouselLoading = true
         await this.fetchMenuPost(this.headers)
         await this.fetchMenuData(1, 1, this.menuLimit)
-      } else if (newIndex == 4){
+      } else if (newIndex == 3){
         this.isLoading = true
         await this.fetchContactData(this.headers)
         this.$nextTick(function() {

@@ -187,24 +187,22 @@ export default function (Vue, { router, head, isClient, appOptions }) {
             commit('setMeta', response.meta.meta)
           } else {
             let featuredList = []
-            featuredList.push({
-              id: 1,
-              name: 'Default Featured 1',
-              summary: 'Default Summary 1',
-              image_main: 'https://img.etimg.com/thumb/msid-67055775,width-643,imgsize-709079,resizemode-4/coffeebeans.jpg'
-            })
-            featuredList.push({
-              id: 2,
-              name: 'Default Featured 2',
-              summary: 'Default Summary 2',
-              image_main: 'https://img.etimg.com/thumb/msid-67055775,width-643,imgsize-709079,resizemode-4/coffeebeans.jpg'
-            })
+
+            for(let i = 1; i <= limit; i++) {
+              featuredList.push({
+                id: i,
+                name: 'Default Featured ' + i,
+                summary: 'Default Summary ' + i,
+                image_main: 'https://img.etimg.com/thumb/msid-67055775,width-643,imgsize-709079,resizemode-4/coffeebeans.jpg'
+              })
+            }
 
             commit('setFeaturedList', featuredList)
             commit('setMeta', {
-              page: 1,
-              perPage: 2,
-              total: 2,
+              lastPage: page,
+              page: page,
+              perPage: limit,
+              total: limit,
             })
           }
         }catch(error) {
@@ -234,6 +232,7 @@ export default function (Vue, { router, head, isClient, appOptions }) {
           }
 
           meta = {
+            lastPage: page,
             page: page,
             perPage: limit,
             total: limit,
