@@ -347,7 +347,7 @@
                                 <v-layout wrap justify-center align-center pa-0 ma-0 style="height: 100%; width: 30%;">
                                   <v-img contains max-height="100%" max-width="100%" :src="fnb.image_main"></v-img>
                                 </v-layout>
-                                <v-layout column wrap justify-center align-start style="height: 100%; width: 70%;">
+                                <v-layout column wrap justify-center align-start pl-2 style="height: 100%; width: 70%;">
                                   <span class="body-2 font-weight-bold text-xs-left">{{ fnb.name }}</span>
                                   <span class="caption font-weight-regular text-xs-left">{{ fnb.summary }}</span>
                                   <span class="body-2 font-weight-medium text-xs-left">{{ fnb.sell_price }}</span>
@@ -381,7 +381,7 @@
                                 <v-layout wrap justify-center align-center pa-0 ma-0 style="height: 100%; width: 30%;">
                                   <v-img contains max-height="100%" max-width="100%" :src="fnb.image_main"></v-img>
                                 </v-layout>
-                                <v-layout column wrap justify-center align-start style="height: 100%; width: 70%;">
+                                <v-layout column wrap justify-center align-start pl-2 style="height: 100%; width: 70%;">
                                   <span class="body-2 font-weight-bold text-xs-left">{{ fnb.name }}</span>
                                   <span class="caption font-weight-regular text-xs-left">{{ fnb.summary }}</span>
                                   <span class="body-2 font-weight-medium text-xs-left">{{ fnb.sell_price }}</span>
@@ -527,7 +527,6 @@
 
 <script>
 import axios from 'axios'
-import maps from '~/utils/maps'
 
 export default {
   metaInfo: {
@@ -704,13 +703,9 @@ export default {
     
     this.loadSections(this.headers)
     this.fetchWelcomePost(this.headers)
-    if (this.maps == null){
-      const google = await maps()
-    }
   },
   methods: {
     goToPage(urlLink) {
-      console.log(urlLink)
       window.open(urlLink, '_blank')
     },
     async selectCard(card) {

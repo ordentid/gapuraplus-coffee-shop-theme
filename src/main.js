@@ -1,7 +1,6 @@
 // This is the main.js file. Import global CSS and scripts here.
 // The Client API can be used here. Learn more: gridsome.org/docs/client-api
 
-import DefaultLayout from '~/layouts/Default.vue'
 import Vuetify from 'vuetify'
 import colors from 'vuetify/es5/util/colors'
 import KsVueFullpage from 'ks-vue-fullpage'
@@ -14,7 +13,9 @@ export default function (Vue, { router, head, isClient, appOptions }) {
   let apiUrl = process.env.GRIDSOME_API_URL
 
   // Set default layout as a global component
-  Vue.component('Layout', DefaultLayout)
+  if (process.isClient){
+    const maps = require('~/utils/maps')
+    }
 
   head.link.push({
     rel: 'stylesheet',
