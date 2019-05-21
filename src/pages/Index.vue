@@ -410,10 +410,15 @@
                 <div id="map" />
               </v-layout>
               <v-layout column pa-0 ma-0 justify-center align-start style="height: 100%; width: 50%">
-                <v-layout column pa-2 ma-0 justify-center align-center style="max-height: 90%; width: 80%; background-color: #FFFFFF; color: #000000;">
-                  <span class="title font-weight-regular text-xs-center">{{ location.value.name }}</span>
-                  <span class="subheading font-weight-light text-xs-center">{{ location.value.description }}</span>
-                </v-layout>
+                <v-parallax
+                  :src="location.value.image_main"
+                  class="cover-image-full hidden-sm-and-down"
+                  style="height: 90%; width: 80%;">
+                    <v-layout column wrap justify-center align-center style="background-color: rgba(0,0,0,0.3); color: white;">
+                      <span class="title font-weight-regular text-xs-center">{{ location.value.name }}</span>
+                      <span class="subheading font-weight-light text-xs-center">{{ location.value.description }}</span>
+                    </v-layout>
+                </v-parallax>
               </v-layout>
             </v-layout>
             <v-layout row ma-0 pa-0 justify-center align-center style="height: 10%; width: 100%; max-width: 100%; color: #FFFFFF;">
@@ -469,10 +474,15 @@
                 <div id="map-mobile" style="height: 100%; width: 100%;"/>
               </v-layout>
               <v-layout column pa-0 ma-0 justify-center align-start style="height: 50%; width: 100%">
-                <v-layout column pa-2 ma-0 justify-center align-center style="height100%; width: 100%; background-color: #FFFFFF; color: #000000;">
-                  <span class="title font-weight-regular text-xs-center">{{ location.value.name }}</span>
-                  <span class="subheading font-weight-light text-xs-center">{{ location.value.description }}</span>
-                </v-layout>
+                <v-parallax
+                  :src="location.value.image_main"
+                  class="cover-image-full hidden-sm-and-up"
+                  style="height: 100%; width: 100%;">
+                    <v-layout column wrap justify-center align-center style="background-color: rgba(0,0,0,0.3); color: white;">
+                      <span class="title font-weight-regular text-xs-center">{{ location.value.name }}</span>
+                      <span class="subheading font-weight-light text-xs-center">{{ location.value.description }}</span>
+                    </v-layout>
+                </v-parallax>
               </v-layout>
             </v-layout>
             <v-layout column wrap ma-0 pa-0 justify-center align-center style="height: 10%; width: 100%; max-width: 100%; color: #FFFFFF;">
@@ -907,7 +917,8 @@ body {
   height: 100%;
 }
 html {
-  height: 100%
+  height: 100%;
+  font-family: 'Roboto', sans-serif;
 }
 .ksvuefp-section {
   display: flex;
