@@ -223,200 +223,198 @@
           </v-layout>
         </template>
         <template v-else-if="section.sectionName == 'food'">
-          <v-app>
-            <v-layout column ma-0 pa-0 section-content hidden-sm-and-down style="background-color: #FDFFFD">
-              <v-parallax
+          <v-layout column ma-0 pa-0 section-content hidden-sm-and-down style="background-color: #FDFFFD">
+            <v-parallax
+              dark
+              :src="menuPost.cover_image"
+              class="ma-0 pa-0 product-parallax"
+              style="height: 30%;">
+                <v-layout column wrap ustify-center align-center pa-0 style="height: 100%; width: 100%; max-width: 100%; color: #000000;">
+                  <span class="display-1 text-xs-center font-weight-strong pt-3">{{ menuPost.title}}</span>
+                  <span class="body-1 text-xs-center pa-3" v-html="menuPost.html_content"></span>
+                </v-layout>
+            </v-parallax>
+            <v-layout column wrap pa-0 style="height: 70%; max-height: 70%; width: 100%; max-width: 100%;">
+              <v-tabs
+                color="white"
+                centered
                 dark
-                :src="menuPost.cover_image"
-                class="ma-0 pa-0 product-parallax"
-                style="height: 30%;">
-                  <v-layout column wrap ustify-center align-center pa-0 style="height: 100%; width: 100%; max-width: 100%; color: #000000;">
-                    <span class="display-1 text-xs-center font-weight-strong pt-3">{{ menuPost.title}}</span>
-                    <span class="body-1 text-xs-center pa-3" v-html="menuPost.html_content"></span>
+                icons-and-text
+              >
+                <v-tabs-slider color="blue" class="minify"/>
+                <v-tab href="#food_tab" class="minify caption resize" style="color: black;" @click="fetchMenuData(1, 1, menuLimit)">
+                  Makanan
+                  <v-icon small color="black">fastfood</v-icon>
+                </v-tab>
+                <v-tab href="#drink_tab" class="minify caption ml-1 resize" style="color: black;" @click="fetchMenuData(2, 1, menuLimit)">
+                  Minuman
+                  <v-icon small color="black">local_drink</v-icon>
+                </v-tab>
+                <v-tab-item :value="'food_tab'">
+                  <v-layout row wrap class="tab-content pa-0 justify-center align-start" style="height: 100%; width: 100%; max-width: 100%;">
+                    <v-flex
+                      xs2
+                      sm2
+                      md2
+                      lg2
+                      v-for="fnb in fnbList"
+                      :items="fnb"
+                      v-bind:key="fnb.id"
+                      style="height: 40%;"
+                      pa-0
+                      ma-2
+                    >
+                      <v-card style="height: 100%; width: 100%;" flat :img="fnb.image_main" @click="selectCard(fnb)">
+                        <v-layout v-show="!fnb.isShow" fill-height fill-width justify-center align-center pa-0 style="background-color: rgba(0,0,0,0.5); color: white;">
+                          <v-card-title class="subheading font-weight-regular text-xs-center">{{ fnb.name }}</v-card-title>
+                        </v-layout>
+                        <v-layout v-show="fnb.isShow" column fill-height fill-width justify-start align-start pa-0 pl-2 pt-2 style="background-color: rgba(255,255,255,0.75); color: black;">
+                          <span class="body-2 font-weight-bold text-xs-left">{{ fnb.name }}</span>
+                          <span class="caption font-weight-regular text-xs-left">{{ fnb.summary }}</span>
+                          <span class="body-2 font-weight-medium text-xs-left">{{ fnb.description }}</span>
+                        </v-layout>
+                      </v-card>
+                    </v-flex>
                   </v-layout>
-              </v-parallax>
-              <v-layout column wrap pa-0 style="height: 70%; max-height: 70%; width: 100%; max-width: 100%;">
-                <v-tabs
-                  color="white"
-                  centered
-                  dark
-                  icons-and-text
-                >
-                  <v-tabs-slider color="blue" class="minify"/>
-                  <v-tab href="#food_tab" class="minify caption resize" style="color: black;" @click="fetchMenuData(1, 1, menuLimit)">
-                    Makanan
-                    <v-icon small color="black">fastfood</v-icon>
-                  </v-tab>
-                  <v-tab href="#drink_tab" class="minify caption ml-1 resize" style="color: black;" @click="fetchMenuData(2, 1, menuLimit)">
-                    Minuman
-                    <v-icon small color="black">local_drink</v-icon>
-                  </v-tab>
-                  <v-tab-item :value="'food_tab'">
-                    <v-layout row wrap class="tab-content pa-0 justify-center align-start" style="height: 100%; width: 100%; max-width: 100%;">
-                      <v-flex
-                        xs2
-                        sm2
-                        md2
-                        lg2
-                        v-for="fnb in fnbList"
-                        :items="fnb"
-                        v-bind:key="fnb.id"
-                        style="height: 40%;"
-                        pa-0
-                        ma-2
-                      >
-                        <v-card style="height: 100%; width: 100%;" flat :img="fnb.image_main" @click="selectCard(fnb)">
-                          <v-layout v-show="!fnb.isShow" fill-height fill-width justify-center align-center pa-0 style="background-color: rgba(0,0,0,0.5); color: white;">
-                            <v-card-title class="subheading font-weight-regular text-xs-center">{{ fnb.name }}</v-card-title>
-                          </v-layout>
-                          <v-layout v-show="fnb.isShow" column fill-height fill-width justify-start align-start pa-0 pl-2 pt-2 style="background-color: rgba(255,255,255,0.75); color: black;">
-                            <span class="body-2 font-weight-bold text-xs-left">{{ fnb.name }}</span>
-                            <span class="caption font-weight-regular text-xs-left">{{ fnb.summary }}</span>
-                            <span class="body-2 font-weight-medium text-xs-left">{{ fnb.description }}</span>
-                          </v-layout>
-                        </v-card>
-                      </v-flex>
-                    </v-layout>
-                  </v-tab-item>
-                  <v-tab-item :value="'drink_tab'">
-                    <v-layout row wrap class="tab-content pa-0 justify-center align-start" style="height: 100%; width: 100%; max-width: 100%;">
-                      <v-flex
-                        xs2
-                        sm2
-                        md2
-                        lg2
-                        v-for="fnb in fnbList"
-                        :items="fnb"
-                        v-bind:key="fnb.id"
-                        style="height: 40%;"
-                        pa-0
-                        ma-3
-                      >
-                        <v-card style="height: 100%; width: 100%;" flat :img="fnb.image_main" @click="selectCard(fnb)">
-                          <v-layout v-show="!fnb.isShow" fill-height fill-width justify-center align-center pa-0 style="background-color: rgba(0,0,0,0.5); color: white;">
-                            <v-card-title class="subheading font-weight-regular text-xs-center">{{ fnb.name }}</v-card-title>
-                          </v-layout>
-                          <v-layout v-show="fnb.isShow" column fill-height fill-width justify-start align-start pa-0 pl-2 pt-2 style="background-color: rgba(255,255,255,0.75); color: black;">
-                            <span class="body-2 font-weight-bold text-xs-left">{{ fnb.name }}</span>
-                            <span class="caption font-weight-regular text-xs-left">{{ fnb.summary }}</span>
-                            <span class="body-2 font-weight-medium text-xs-left">{{ fnb.description }}</span>
-                          </v-layout>
-                        </v-card>
-                      </v-flex>
-                    </v-layout>
-                  </v-tab-item>
-                </v-tabs>
-              </v-layout>
+                </v-tab-item>
+                <v-tab-item :value="'drink_tab'">
+                  <v-layout row wrap class="tab-content pa-0 justify-center align-start" style="height: 100%; width: 100%; max-width: 100%;">
+                    <v-flex
+                      xs2
+                      sm2
+                      md2
+                      lg2
+                      v-for="fnb in fnbList"
+                      :items="fnb"
+                      v-bind:key="fnb.id"
+                      style="height: 40%;"
+                      pa-0
+                      ma-3
+                    >
+                      <v-card style="height: 100%; width: 100%;" flat :img="fnb.image_main" @click="selectCard(fnb)">
+                        <v-layout v-show="!fnb.isShow" fill-height fill-width justify-center align-center pa-0 style="background-color: rgba(0,0,0,0.5); color: white;">
+                          <v-card-title class="subheading font-weight-regular text-xs-center">{{ fnb.name }}</v-card-title>
+                        </v-layout>
+                        <v-layout v-show="fnb.isShow" column fill-height fill-width justify-start align-start pa-0 pl-2 pt-2 style="background-color: rgba(255,255,255,0.75); color: black;">
+                          <span class="body-2 font-weight-bold text-xs-left">{{ fnb.name }}</span>
+                          <span class="caption font-weight-regular text-xs-left">{{ fnb.summary }}</span>
+                          <span class="body-2 font-weight-medium text-xs-left">{{ fnb.description }}</span>
+                        </v-layout>
+                      </v-card>
+                    </v-flex>
+                  </v-layout>
+                </v-tab-item>
+              </v-tabs>
             </v-layout>
-            <v-layout wrap column ma-0 pa-0 section-content-mobile hidden-sm-and-up style="background-color: #FDFFFD">
-              <v-parallax
+          </v-layout>
+          <v-layout wrap column ma-0 pa-0 section-content-mobile hidden-sm-and-up style="background-color: #FDFFFD">
+            <v-parallax
+              dark
+              :src="menuPost.cover_image"
+              class="ma-0 pa-0 product-parallax"
+              style="height: 30%;">
+                <v-layout column wrap ustify-center align-center pa-0 style="height: 100%; max-height: 100%; width: 100%; max-width: 100%; color: #000000;">
+                  <span class="display-1 text-xs-center font-weight-strong pt-3">{{ menuPost.title}}</span>
+                  <span class="body-1 text-xs-center pa-3" v-html="menuPost.html_content"></span>
+                </v-layout>
+            </v-parallax>
+            <v-layout column wrap pa-0 style="height: 70%; max-height:70%; width: 100%; max-width: 100%;">
+              <v-tabs
+                color="white"
+                centered
                 dark
-                :src="menuPost.cover_image"
-                class="ma-0 pa-0 product-parallax"
-                style="height: 30%;">
-                  <v-layout column wrap ustify-center align-center pa-0 style="height: 100%; max-height: 100%; width: 100%; max-width: 100%; color: #000000;">
-                    <span class="display-1 text-xs-center font-weight-strong pt-3">{{ menuPost.title}}</span>
-                    <span class="body-1 text-xs-center pa-3" v-html="menuPost.html_content"></span>
+                icons-and-text
+              >
+                <v-tabs-slider color="blue" class="mobile"/>
+                <v-tab href="#food_tab" class="caption resize mobile" style="color: black; min-width: 50%;" @click="fetchMenuData(1, 1, menuLimit)">
+                  <v-layout row wrap pa-0 pl-2 align-center style="width: 100%; height: 100%;">
+                    <v-icon medium color="black">fastfood</v-icon>
+                    <span class="subheading font-weight-medium">Makanan</span>
                   </v-layout>
-              </v-parallax>
-              <v-layout column wrap pa-0 style="height: 70%; max-height:70%; width: 100%; max-width: 100%;">
-                <v-tabs
-                  color="white"
-                  centered
-                  dark
-                  icons-and-text
-                >
-                  <v-tabs-slider color="blue" class="mobile"/>
-                  <v-tab href="#food_tab" class="caption resize mobile" style="color: black; min-width: 50%;" @click="fetchMenuData(1, 1, menuLimit)">
-                    <v-layout row wrap pa-0 pl-2 align-center style="width: 100%; height: 100%;">
-                      <v-icon medium color="black">fastfood</v-icon>
-                      <span class="subheading font-weight-medium">Makanan</span>
-                    </v-layout>
-                  </v-tab>
-                  <v-tab href="#drink_tab" class="caption resize mobile" style="color: black; min-width: 50%;" @click="fetchMenuData(2, 1, menuLimit)">
-                    <v-layout row wrap pa-0 pl-2 align-center style="width: 100%; height: 100%;">
-                      <v-icon medium color="black">local_drink</v-icon>
-                      <span class="subheading font-weight-medium">Minuman</span>
-                    </v-layout>
-                  </v-tab>
-                  <v-tab-item :value="'food_tab'">
-                    <v-carousel hide-delimiters dark class="layout wrap fill-width pa-0" style="height: 100%;" @click.native="foodCarouselClick">
-                      <v-carousel-item class="layout wrap fill-width pa-0 menu-content">
-                        <template v-if="!carouselLoading">
-                          <v-layout column wrap class="tab-content-mobile pa-0 justify-center align-start" style="height: 100%; width: 100%; max-width: 100%;">
-                            <v-flex
-                              xs4
-                              v-for="fnb in fnbList"
-                              :items="fnb"
-                              v-bind:key="fnb.id"
-                              pa-0
-                              layout
-                              justify-center
-                              align-center
-                              style="width: 100%; height: 100%;"
-                            >
-                              <v-layout row wrap fill-width fill-height>
-                                <v-layout wrap justify-center align-center pa-0 ma-0 style="height: 100%; width: 30%;">
-                                  <v-img contains max-height="100%" max-width="100%" :src="fnb.image_main"></v-img>
-                                </v-layout>
-                                <v-layout column wrap justify-center align-start pl-2 style="height: 100%; width: 70%;">
-                                  <span class="body-2 font-weight-bold text-xs-left">{{ fnb.name }}</span>
-                                  <span class="caption font-weight-regular text-xs-left">{{ fnb.summary }}</span>
-                                  <span class="body-2 font-weight-medium text-xs-left">{{ fnb.sell_price }}</span>
-                                </v-layout>
+                </v-tab>
+                <v-tab href="#drink_tab" class="caption resize mobile" style="color: black; min-width: 50%;" @click="fetchMenuData(2, 1, menuLimit)">
+                  <v-layout row wrap pa-0 pl-2 align-center style="width: 100%; height: 100%;">
+                    <v-icon medium color="black">local_drink</v-icon>
+                    <span class="subheading font-weight-medium">Minuman</span>
+                  </v-layout>
+                </v-tab>
+                <v-tab-item :value="'food_tab'">
+                  <v-carousel hide-delimiters dark class="layout wrap fill-width pa-0" style="height: 100%;" @click.native="foodCarouselClick">
+                    <v-carousel-item class="layout wrap fill-width pa-0 menu-content">
+                      <template v-if="!carouselLoading">
+                        <v-layout column wrap class="tab-content-mobile pa-0 justify-center align-start" style="height: 100%; width: 100%; max-width: 100%;">
+                          <v-flex
+                            xs4
+                            v-for="fnb in fnbList"
+                            :items="fnb"
+                            v-bind:key="fnb.id"
+                            pa-0
+                            layout
+                            justify-center
+                            align-center
+                            style="width: 100%; height: 100%;"
+                          >
+                            <v-layout row wrap fill-width fill-height>
+                              <v-layout wrap justify-center align-center pa-0 ma-0 style="height: 100%; width: 30%;">
+                                <v-img contains max-height="100%" max-width="100%" :src="fnb.image_main"></v-img>
                               </v-layout>
-                            </v-flex>
-                        </v-layout>
-                        </template>
-                        <template v-else>
-                          <v-layout column wrap class="tab-content-mobile pa-0 justify-center align-center" style="height: 100%; width: 100%; max-width: 100%;">
-                            <v-progress-circular indeterminate color="grey" style="height: 50%; width: 50%;"></v-progress-circular>
-                          </v-layout>
-                        </template>
-                      </v-carousel-item>
-                    </v-carousel>
-                  </v-tab-item>
-                  <v-tab-item :value="'drink_tab'">
-                    <v-carousel hide-delimiters dark class="layout wrap fill-width pa-0" style="height: 100%;" @click.native="drinkCarouselClick">
-                      <v-carousel-item class="layout wrap fill-width pa-0 menu-content">
-                        <template v-if="!carouselLoading">
-                          <v-layout column wrap class="tab-content-mobile pa-0 justify-start align-start" style="height: 100%; width: 100%; max-width: 100%;">
-                            <v-flex
-                              xs4
-                              v-for="fnb in fnbList"
-                              :items="fnb"
-                              v-bind:key="fnb.id"
-                              pa-0
-                              layout
-                              justify-center
-                              align-center
-                              style="width: 100%; height: 100%;"
-                            >
-                              <v-layout row wrap fill-height fill-width>
-                                <v-layout wrap justify-center align-center pa-0 ma-0 style="height: 100%; width: 30%;">
-                                  <v-img contains max-height="100%" max-width="100%" :src="fnb.image_main"></v-img>
-                                </v-layout>
-                                <v-layout column wrap justify-center align-start pl-2 style="height: 100%; width: 70%;">
-                                  <span class="body-2 font-weight-bold text-xs-left">{{ fnb.name }}</span>
-                                  <span class="caption font-weight-regular text-xs-left">{{ fnb.summary }}</span>
-                                  <span class="body-2 font-weight-medium text-xs-left">{{ fnb.sell_price }}</span>
-                                </v-layout>
+                              <v-layout column wrap justify-center align-start pl-2 style="height: 100%; width: 70%;">
+                                <span class="body-2 font-weight-bold text-xs-left">{{ fnb.name }}</span>
+                                <span class="caption font-weight-regular text-xs-left">{{ fnb.summary }}</span>
+                                <span class="body-2 font-weight-medium text-xs-left">{{ fnb.sell_price }}</span>
                               </v-layout>
-                            </v-flex>
+                            </v-layout>
+                          </v-flex>
+                      </v-layout>
+                      </template>
+                      <template v-else>
+                        <v-layout column wrap class="tab-content-mobile pa-0 justify-center align-center" style="height: 100%; width: 100%; max-width: 100%;">
+                          <v-progress-circular indeterminate color="grey" style="height: 50%; width: 50%;"></v-progress-circular>
                         </v-layout>
-                        </template>
-                        <template v-else>
-                          <v-layout column wrap class="tab-content-mobile pa-0 justify-center align-center" style="height: 100%; width: 100%; max-width: 100%;">
-                            <v-progress-circular indeterminate color="grey" style="height: 50%; width: 50%;"></v-progress-circular>
-                          </v-layout>
-                        </template>
-                      </v-carousel-item>
-                    </v-carousel>
-                  </v-tab-item>
-                </v-tabs>
-              </v-layout>
+                      </template>
+                    </v-carousel-item>
+                  </v-carousel>
+                </v-tab-item>
+                <v-tab-item :value="'drink_tab'">
+                  <v-carousel hide-delimiters dark class="layout wrap fill-width pa-0" style="height: 100%;" @click.native="drinkCarouselClick">
+                    <v-carousel-item class="layout wrap fill-width pa-0 menu-content">
+                      <template v-if="!carouselLoading">
+                        <v-layout column wrap class="tab-content-mobile pa-0 justify-start align-start" style="height: 100%; width: 100%; max-width: 100%;">
+                          <v-flex
+                            xs4
+                            v-for="fnb in fnbList"
+                            :items="fnb"
+                            v-bind:key="fnb.id"
+                            pa-0
+                            layout
+                            justify-center
+                            align-center
+                            style="width: 100%; height: 100%;"
+                          >
+                            <v-layout row wrap fill-height fill-width>
+                              <v-layout wrap justify-center align-center pa-0 ma-0 style="height: 100%; width: 30%;">
+                                <v-img contains max-height="100%" max-width="100%" :src="fnb.image_main"></v-img>
+                              </v-layout>
+                              <v-layout column wrap justify-center align-start pl-2 style="height: 100%; width: 70%;">
+                                <span class="body-2 font-weight-bold text-xs-left">{{ fnb.name }}</span>
+                                <span class="caption font-weight-regular text-xs-left">{{ fnb.summary }}</span>
+                                <span class="body-2 font-weight-medium text-xs-left">{{ fnb.sell_price }}</span>
+                              </v-layout>
+                            </v-layout>
+                          </v-flex>
+                      </v-layout>
+                      </template>
+                      <template v-else>
+                        <v-layout column wrap class="tab-content-mobile pa-0 justify-center align-center" style="height: 100%; width: 100%; max-width: 100%;">
+                          <v-progress-circular indeterminate color="grey" style="height: 50%; width: 50%;"></v-progress-circular>
+                        </v-layout>
+                      </template>
+                    </v-carousel-item>
+                  </v-carousel>
+                </v-tab-item>
+              </v-tabs>
             </v-layout>
-          </v-app>
+          </v-layout>
         </template>
         <template v-else-if="section.sectionName == 'contact'">
           <v-layout v-if="!isLoading" column ma-0 pa-0 section-content hidden-sm-and-down style="background-color: #24232A">
