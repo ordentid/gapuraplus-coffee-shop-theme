@@ -724,16 +724,22 @@ export default {
   async mounted() {
     let Velocity = require('velocity-animate')
     let hammerjs = require('hammerjs')
+    let params = this.$route.query
 
     this.velocity = Velocity
     this.hammerjs = hammerjs
     
-    this.loadSections(this.headers)
-    this.fetchWelcomePost(this.headers)
+    if (params.Preview){
+      console.log('preview')
+      this.loadSections(this.headers, params.Preview, params.type)
+    } else {
+      this.loadSections(this.headers)
+      this.fetchWelcomePost(this.headers)
 
-    if (process.isClient){
-      const maps = require('~/utils/maps').default
-      await maps()
+      if (process.isClient){
+        const maps = require('~/utils/maps').default
+        await maps()
+      }
     }
   },
   methods: {
@@ -748,62 +754,115 @@ export default {
       }
       this.$forceUpdate()
     },
-    async loadSections(headers) {
-      await this.$store.dispatch('fetchConfig', headers)
-
+    async loadSections(headers, preview = false, type = null) {
       let sections = []
       let contentSections = []
       let sectionId = 0
-      let config = this.config
 
-      if (config.use_home){
-        this.homeSection = {
-          id: 1,
-          sectionName: 'home',
-          sectionMenu: config.home_menu,
-          sectionId: sectionId,
-          useIcon: config.use_home_icon,
-          iconUrl: config.home_icon
+      if (preview){
+        headers.Preview = preview
+        
+        if (type == 2){
+          this.homeSection = {
+            id: 1,
+            sectionName: 'home',
+            sectionMenu: 'Home Preview',
+            sectionId: sectionId,
+            useIcon: false,
+            iconUrl: null 
+          }
+          contentSections.push(this.homeSection)
+
+          await fetchWelcomePost(headers)
+        } else if (type == 4){
+          this.homeSection = {
+            sectionName: 'home',
+            sectionMenu: 'Rekomendasi Preview',
+            sectionId: sectionId,
+            useIcon: false,
+            iconUrl: ''
+          }
+          sections.push({
+            id: 1,
+            sectionName: 'product',
+            sectionMenu: 'Rekomendasi Preview',
+            sectionId: sectionId,
+          })
+
+          await this.fetchProductPost(headers)
+          await this.fetchProductData(1, this.productLimit, headers)
+        } else if (type == 5) {
+          sections.push({
+            id: 1,
+            sectionName: 'food',
+            sectionMenu: 'Menu Preview',
+            sectionId: sectionId,
+          })
+
+          await this.fetchMenuPost(headers)
+          await this.fetchMenuData(1, 1, this.menuLimit)
+        } else if (type == 6) {
+          sections.push({
+            id: 1,
+            sectionName: 'contact',
+            sectionMenu: 'Contact Preview',
+            sectionId: sectionId,
+          })
+        }
+      } else {
+        await this.$store.dispatch('fetchConfig', headers)
+        let config = this.config
+
+        if (config.use_home){
+          this.homeSection = {
+            id: 1,
+            sectionName: 'home',
+            sectionMenu: config.home_menu,
+            sectionId: sectionId,
+            useIcon: config.use_home_icon,
+            iconUrl: config.home_icon
+          }
+
+          contentSections.push(this.homeSection)
+          sectionId++
         }
 
-        contentSections.push(this.homeSection)
-        sectionId++
-      }
+        if (config.use_products){
+          sections.push({
+            id: 2,
+            sectionName: 'product',
+            sectionMenu: config.product_menu,
+            sectionId: sectionId,
+          })
+          sectionId++
+        }
 
-      if (config.use_products){
-        sections.push({
-          id: 2,
-          sectionName: 'product',
-          sectionMenu: config.product_menu,
-          sectionId: sectionId,
-        })
-        sectionId++
-      }
+        if (config.use_food){
+          sections.push({
+            id: 3,
+            sectionName: 'food',
+            sectionMenu: config.food_menu,
+            sectionId: sectionId,
+          })
+          sectionId++
+        }
 
-      if (config.use_food){
-        sections.push({
-          id: 3,
-          sectionName: 'food',
-          sectionMenu: config.food_menu,
-          sectionId: sectionId,
-        })
-        sectionId++
-      }
-
-      if (config.use_contacts){
-        sections.push({
-          id: 4,
-          sectionName: 'contact',
-          sectionMenu: config.contact_menu,
-          sectionId: sectionId,
-        })
-        sectionId++
+        if (config.use_contacts){
+          sections.push({
+            id: 4,
+            sectionName: 'contact',
+            sectionMenu: config.contact_menu,
+            sectionId: sectionId,
+          })
+          sectionId++
+        }
       }
 
       this.menuSections = sections
       this.contentSections = contentSections.concat.apply(contentSections, sections)
     },
     async productCarouselClick(param) {
+      console.log('called')
       this.carouselLoading = true
       let halfScreen = Math.floor(screen.width / 2)
       if (param.clientX > halfScreen){
