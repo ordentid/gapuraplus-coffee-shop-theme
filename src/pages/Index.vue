@@ -350,9 +350,12 @@
                               :items="fnb"
                               v-bind:key="fnb.id"
                               pa-0
+                              layout
+                              justify-center
+                              align-center
                               style="width: 100%; height: 100%;"
                             >
-                              <v-layout row wrap fill-height fill-width>
+                              <v-layout row wrap fill-width fill-height>
                                 <v-layout wrap justify-center align-center pa-0 ma-0 style="height: 100%; width: 30%;">
                                   <v-img contains max-height="100%" max-width="100%" :src="fnb.image_main"></v-img>
                                 </v-layout>
@@ -384,6 +387,9 @@
                               :items="fnb"
                               v-bind:key="fnb.id"
                               pa-0
+                              layout
+                              justify-center
+                              align-center
                               style="width: 100%; height: 100%;"
                             >
                               <v-layout row wrap fill-height fill-width>
