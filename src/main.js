@@ -181,8 +181,9 @@ export default function (Vue, { router, head, isClient, appOptions }) {
         try {
           let response = await axios.get(url, {headers: params.headers})
           if (response.data.data != null && response.data.data.length > 0){
+            console.log(response)
             commit('setFeaturedList', response.data.data)
-            commit('setMeta', response.meta.meta)
+            commit('setMeta', response.data.meta)
           } else {
             let featuredList = []
 

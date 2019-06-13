@@ -139,29 +139,38 @@
             <v-layout column wrap pa-0 style="height: 65%; width: 100%; max-width: 100%;">
               <v-carousel hide-delimiters dark @click.native="productCarouselClick">
                 <v-carousel-item>
-                  <v-layout row fill-height justify-center align-center pa-0 style="width: 100%; max-width: 100%;">
-                    <v-flex
-                      xs5
-                      sm5
-                      md5
-                      lg5
-                      v-for="featured in featuredList"
-                      :items="featured"
-                      v-bind:key="featured.id"
-                      pa-0
-                      ma-2
-                      style="height: 80%;"
-                    >
-                      <v-card style="height: 100%; width: 100%;" flat :img="featured.image_main">
-                        <v-card-text style="height: 50%; width: 100%; background_color: white;">
-                          <v-layout column wrap fill-width fill-height justify-center align-center>
-                            <span class="title font-weight-regular mb-2">{{ featured.name }}</span>
-                            <span class="subheading font-weight-light mb-2 px-2 text-xs-center">{{ featured.summary }}</span>
+                  <template v-if="!carouselLoading">
+                    <v-layout row fill-height justify-center align-center pa-0 style="width: 100%; max-width: 100%;">
+                      <v-flex
+                        xs5
+                        sm5
+                        md5
+                        lg5
+                        v-for="featured in featuredList"
+                        :items="featured"
+                        v-bind:key="featured.id"
+                        pa-0
+                        ma-2
+                        style="height: 80%;"
+                      >
+                        <v-card style="height: 100%; width: 100%;" flat :img="featured.image_main">
+                          <v-layout wrap fill-height fill-width style="background-color: rgba(0,0,0,0.6);">
+                            <v-card-text style="height: 50%; width: 100%; background_color: white;">
+                              <v-layout column wrap fill-width fill-height justify-center align-center>
+                                <span class="title font-weight-regular mb-2">{{ featured.name }}</span>
+                                <span class="subheading font-weight-light mb-2 px-2 text-xs-center">{{ featured.summary }}</span>
+                              </v-layout>
+                            </v-card-text>
                           </v-layout>
-                        </v-card-text>
-                      </v-card>
-                    </v-flex>
-                  </v-layout>
+                        </v-card>
+                      </v-flex>
+                    </v-layout>
+                  </template>
+                  <template v-else>
+                    <v-layout column wrap class="tab-content-mobile pa-0 justify-center align-center" style="height: 100%; width: 100%; max-width: 100%;">
+                      <v-progress-circular indeterminate color="grey" style="height: 50%; width: 50%;"></v-progress-circular>
+                    </v-layout>
+                  </template>
                 </v-carousel-item>
               </v-carousel>
             </v-layout>
@@ -356,11 +365,11 @@
                             </v-flex>
                         </v-layout>
                         </template>
-                          <template v-else>
-                            <v-layout column wrap class="tab-content-mobile pa-0 justify-center align-center" style="height: 100%; width: 100%; max-width: 100%;">
-                              <v-progress-circular indeterminate color="grey" style="height: 50%; width: 50%;"></v-progress-circular>
-                            </v-layout>
-                          </template>
+                        <template v-else>
+                          <v-layout column wrap class="tab-content-mobile pa-0 justify-center align-center" style="height: 100%; width: 100%; max-width: 100%;">
+                            <v-progress-circular indeterminate color="grey" style="height: 50%; width: 50%;"></v-progress-circular>
+                          </v-layout>
+                        </template>
                       </v-carousel-item>
                     </v-carousel>
                   </v-tab-item>
@@ -791,6 +800,7 @@ export default {
       this.contentSections = contentSections.concat.apply(contentSections, sections)
     },
     async productCarouselClick(param) {
+      this.carouselLoading = true
       let halfScreen = Math.floor(screen.width / 2)
       if (param.clientX > halfScreen){
         if (this.page < this.meta.lastPage){
@@ -803,6 +813,7 @@ export default {
           await this.fetchProductData(this.page, this.productLimit, this.headers)
         }
       }
+      this.carouselLoading = false
     },
     async foodCarouselClick(param) {
       let halfScreen = Math.floor(screen.width / 2)
