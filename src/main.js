@@ -198,7 +198,7 @@ export default function (Vue, { router, head, isClient, appOptions }) {
 
             commit('setFeaturedList', featuredList)
             commit('setMeta', {
-              lastPage: page,
+              lastPage: 1,
               page: page,
               perPage: limit,
               total: limit,
@@ -231,7 +231,7 @@ export default function (Vue, { router, head, isClient, appOptions }) {
           }
 
           meta = {
-            lastPage: page,
+            lastPage: 1,
             page: page,
             perPage: limit,
             total: limit,

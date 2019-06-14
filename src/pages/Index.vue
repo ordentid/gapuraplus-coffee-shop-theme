@@ -242,11 +242,11 @@
                 icons-and-text
               >
                 <v-tabs-slider color="blue" class="minify"/>
-                <v-tab href="#food_tab" class="minify caption resize" style="color: black;" @click="fetchMenuData(1, 1, menuLimit)">
+                <v-tab href="#food_tab" class="minify caption resize" style="color: black;" @click="changeTab(1)">
                   Makanan
                   <v-icon small color="black">fastfood</v-icon>
                 </v-tab>
-                <v-tab href="#drink_tab" class="minify caption ml-1 resize" style="color: black;" @click="fetchMenuData(2, 1, menuLimit)">
+                <v-tab href="#drink_tab" class="minify caption ml-1 resize" style="color: black;" @click="changeTab(2)">
                   Minuman
                   <v-icon small color="black">local_drink</v-icon>
                 </v-tab>
@@ -326,89 +326,117 @@
                 icons-and-text
               >
                 <v-tabs-slider color="blue" class="mobile"/>
-                <v-tab href="#food_tab" class="caption resize mobile" style="color: black; min-width: 50%;" @click="fetchMenuData(1, 1, menuLimit)">
+                <v-tab href="#food_tab" class="caption resize mobile" style="color: black; min-width: 50%;" @click="changeTab(1)">
                   <v-layout row wrap pa-0 pl-2 align-center style="width: 100%; height: 100%;">
                     <v-icon medium color="black">fastfood</v-icon>
                     <span class="subheading font-weight-medium">Makanan</span>
                   </v-layout>
                 </v-tab>
-                <v-tab href="#drink_tab" class="caption resize mobile" style="color: black; min-width: 50%;" @click="fetchMenuData(2, 1, menuLimit)">
+                <v-tab href="#drink_tab" class="caption resize mobile" style="color: black; min-width: 50%;" @click="changeTab(2)">
                   <v-layout row wrap pa-0 pl-2 align-center style="width: 100%; height: 100%;">
                     <v-icon medium color="black">local_drink</v-icon>
                     <span class="subheading font-weight-medium">Minuman</span>
                   </v-layout>
                 </v-tab>
                 <v-tab-item :value="'food_tab'">
-                  <v-carousel hide-delimiters dark class="layout wrap fill-width pa-0" style="height: 100%;" @click.native="foodCarouselClick">
+                  <v-carousel hide-delimiters hide-controls dark class="layout wrap fill-width pa-0" style="height: 100%;">
                     <v-carousel-item class="layout wrap fill-width pa-0 menu-content">
-                      <template v-if="!carouselLoading">
-                        <v-layout column wrap class="tab-content-mobile pa-0 justify-center align-start" style="height: 100%; width: 100%; max-width: 100%;">
-                          <v-flex
-                            xs4
-                            v-for="fnb in fnbList"
-                            :items="fnb"
-                            v-bind:key="fnb.id"
-                            pa-0
-                            layout
-                            justify-center
-                            align-center
-                            style="width: 100%; height: 100%;"
-                          >
-                            <v-layout row wrap fill-width fill-height>
-                              <v-layout wrap justify-center align-center pa-0 ma-0 style="height: 100%; width: 30%;">
-                                <v-img contains max-height="100%" max-width="100%" :src="fnb.image_main"></v-img>
+                      <v-layout column wrap style="height: 90%; width: 100%;">
+                        <template v-if="!carouselLoading && selectedTab == 1">
+                          <v-layout column wrap class="tab-content-mobile pa-0 justify-center align-start" style="height: 100%; width: 100%; max-width: 100%;">
+                            <v-flex
+                              xs4
+                              v-for="fnb in fnbList"
+                              :items="fnb"
+                              v-bind:key="fnb.id"
+                              pa-0
+                              layout
+                              justify-center
+                              align-center
+                              style="width: 100%; height: 100%;"
+                            >
+                              <v-layout row wrap fill-width fill-height>
+                                <v-layout wrap justify-center align-center pa-0 ma-0 style="height: 100%; width: 30%;">
+                                  <v-img contains max-height="100%" max-width="100%" :src="fnb.image_main"></v-img>
+                                </v-layout>
+                                <v-layout column wrap justify-center align-start pl-2 style="height: 100%; width: 70%;">
+                                  <span class="body-2 font-weight-bold text-xs-left">{{ fnb.name }}</span>
+                                  <span class="caption font-weight-regular text-xs-left">{{ fnb.summary }}</span>
+                                  <span class="body-2 font-weight-medium text-xs-left">{{ fnb.sell_price }}</span>
+                                </v-layout>
                               </v-layout>
-                              <v-layout column wrap justify-center align-start pl-2 style="height: 100%; width: 70%;">
-                                <span class="body-2 font-weight-bold text-xs-left">{{ fnb.name }}</span>
-                                <span class="caption font-weight-regular text-xs-left">{{ fnb.summary }}</span>
-                                <span class="body-2 font-weight-medium text-xs-left">{{ fnb.sell_price }}</span>
-                              </v-layout>
-                            </v-layout>
-                          </v-flex>
-                      </v-layout>
-                      </template>
-                      <template v-else>
-                        <v-layout column wrap class="tab-content-mobile pa-0 justify-center align-center" style="height: 100%; width: 100%; max-width: 100%;">
-                          <v-progress-circular indeterminate color="grey" style="height: 50%; width: 50%;"></v-progress-circular>
+                            </v-flex>
                         </v-layout>
-                      </template>
+                        </template>
+                        <template v-else>
+                          <v-layout column wrap class="tab-content-mobile pa-0 justify-center align-center" style="height: 100%; width: 100%; max-width: 100%;">
+                            <v-progress-circular indeterminate color="grey" style="height: 50%; width: 50%;"></v-progress-circular>
+                          </v-layout>
+                        </template>
+                      </v-layout>
+                      <v-layout row justify-center align-center style="height: 10%; width: 100%;">
+                        <v-btn flat style="background-color: rgba(0, 0, 0, 0.0)">
+                          <v-icon large @click="carouselNavigation(1, 0)">
+                            keyboard_arrow_left
+                          </v-icon>
+                        </v-btn>
+                        <v-btn flat style="background-color: rgba(0, 0, 0, 0.0)">
+                          <v-icon large @click="carouselNavigation(1, 1)">
+                            keyboard_arrow_right
+                          </v-icon>
+                        </v-btn>
+                      </v-layout>
                     </v-carousel-item>
                   </v-carousel>
                 </v-tab-item>
                 <v-tab-item :value="'drink_tab'">
-                  <v-carousel hide-delimiters dark class="layout wrap fill-width pa-0" style="height: 100%;" @click.native="drinkCarouselClick">
+                  <v-carousel hide-delimiters hide-controls dark class="layout wrap fill-width pa-0" style="height: 100%;">
                     <v-carousel-item class="layout wrap fill-width pa-0 menu-content">
-                      <template v-if="!carouselLoading">
-                        <v-layout column wrap class="tab-content-mobile pa-0 justify-start align-start" style="height: 100%; width: 100%; max-width: 100%;">
-                          <v-flex
-                            xs4
-                            v-for="fnb in fnbList"
-                            :items="fnb"
-                            v-bind:key="fnb.id"
-                            pa-0
-                            layout
-                            justify-center
-                            align-center
-                            style="width: 100%; height: 100%;"
-                          >
-                            <v-layout row wrap fill-height fill-width>
-                              <v-layout wrap justify-center align-center pa-0 ma-0 style="height: 100%; width: 30%;">
-                                <v-img contains max-height="100%" max-width="100%" :src="fnb.image_main"></v-img>
+                      <v-layout column style="height: 90%; width: 100%;">
+                        <template v-if="!carouselLoading && selectedTab == 2">
+                          <v-layout column wrap class="tab-content-mobile pa-0 justify-start align-start" style="height: 100%; width: 100%; max-width: 100%;">
+                            <v-flex
+                              xs4
+                              v-for="fnb in fnbList"
+                              :items="fnb"
+                              v-bind:key="fnb.id"
+                              pa-0
+                              layout
+                              justify-center
+                              align-center
+                              style="width: 100%; height: 100%;"
+                            >
+                              <v-layout row wrap fill-height fill-width>
+                                <v-layout wrap justify-center align-center pa-0 ma-0 style="height: 100%; width: 30%;">
+                                  <v-img contains max-height="100%" max-width="100%" :src="fnb.image_main"></v-img>
+                                </v-layout>
+                                <v-layout column wrap justify-center align-start pl-2 style="height: 100%; width: 70%;">
+                                  <span class="body-2 font-weight-bold text-xs-left">{{ fnb.name }}</span>
+                                  <span class="caption font-weight-regular text-xs-left">{{ fnb.summary }}</span>
+                                  <span class="body-2 font-weight-medium text-xs-left">{{ fnb.sell_price }}</span>
+                                </v-layout>
                               </v-layout>
-                              <v-layout column wrap justify-center align-start pl-2 style="height: 100%; width: 70%;">
-                                <span class="body-2 font-weight-bold text-xs-left">{{ fnb.name }}</span>
-                                <span class="caption font-weight-regular text-xs-left">{{ fnb.summary }}</span>
-                                <span class="body-2 font-weight-medium text-xs-left">{{ fnb.sell_price }}</span>
-                              </v-layout>
-                            </v-layout>
-                          </v-flex>
+                            </v-flex>
+                          </v-layout>
+                        </template>
+                        <template v-else>
+                          <v-layout column wrap class="tab-content-mobile pa-0 justify-center align-center" style="height: 100%; width: 100%; max-width: 100%;">
+                            <v-progress-circular indeterminate color="grey" style="height: 50%; width: 50%;"></v-progress-circular>
+                          </v-layout>
+                        </template>
                       </v-layout>
-                      </template>
-                      <template v-else>
-                        <v-layout column wrap class="tab-content-mobile pa-0 justify-center align-center" style="height: 100%; width: 100%; max-width: 100%;">
-                          <v-progress-circular indeterminate color="grey" style="height: 50%; width: 50%;"></v-progress-circular>
-                        </v-layout>
-                      </template>
+                      <v-layout row justify-center align-center style="height: 10%; width: 100%;">
+                        <v-btn flat style="background-color: rgba(0, 0, 0, 0.0)">
+                          <v-icon large @click="carouselNavigation(2, 0)">
+                            keyboard_arrow_left
+                          </v-icon>
+                        </v-btn>
+                        <v-btn flat style="background-color: rgba(0, 0, 0, 0.0)">
+                          <v-icon large @click="carouselNavigation(2, 1)">
+                            keyboard_arrow_right
+                          </v-icon>
+                        </v-btn>
+                      </v-layout>
                     </v-carousel-item>
                   </v-carousel>
                 </v-tab-item>
@@ -719,6 +747,7 @@ export default {
       homeSection: {},
       sideMenu: [],
       page: 1,
+      selectedTab: 1,
     }
   },
   async mounted() {
@@ -876,6 +905,10 @@ export default {
       this.menuSections = sections
       this.contentSections = contentSections.concat.apply(contentSections, sections)
     },
+    async changeTab(type) {
+      this.page = 1
+      await this.fetchMenuData(type, this.page, this.menuLimit)
+    },
     async productCarouselClick(param) {
       this.carouselLoading = true
       let halfScreen = Math.floor(screen.width / 2)
@@ -920,6 +953,22 @@ export default {
         }
       }
     },
+    async carouselNavigation(type, navigation) {
+      if (!this.carouselLoading){
+        console.log('called')
+        if (navigation > 0){
+          if (this.page < this.meta.lastPage){
+            this.page++
+            await this.fetchMenuData(type, this.page, this.menuLimit)
+          }
+        } else {
+          if (this.page > 1){
+            this.page--
+            await this.fetchMenuData(type, this.page, this.menuLimit)
+          }
+        }
+      }
+    },
     async fetchWelcomePost(headers) {
       await this.$store.dispatch('fetchWelcomePost', headers)
       this.isLoading = false
@@ -942,7 +991,7 @@ export default {
     },
     async fetchMenuData(type, page, limit) {
       this.carouselLoading = true
-
+      
       let queryParams = {
         headers: this.headers,
         type: type,
@@ -952,6 +1001,7 @@ export default {
 
       await this.$store.dispatch('fetchFnbList', queryParams)
       this.carouselLoading = false
+      this.selectedTab = type
     },
     async fetchContactData(headers) {
       let request = {
