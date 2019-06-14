@@ -728,18 +728,17 @@ export default {
 
     this.velocity = Velocity
     this.hammerjs = hammerjs
-    
-    if (params.Preview){
-      console.log('preview')
-      this.loadSections(this.headers, params.Preview, params.type)
+
+    if (params.preview){
+      await this.loadSections(this.headers, params.preview, params.type)
     } else {
       this.loadSections(this.headers)
       this.fetchWelcomePost(this.headers)
+    }
 
-      if (process.isClient){
-        const maps = require('~/utils/maps').default
-        await maps()
-      }
+    if (process.isClient){
+      const maps = require('~/utils/maps').default
+      await maps()
     }
   },
   methods: {
@@ -760,8 +759,6 @@ export default {
       let sectionId = 0
 
       if (preview){
-        headers.Preview = preview
-        
         if (type == 2){
           this.homeSection = {
             id: 1,
@@ -773,7 +770,7 @@ export default {
           }
           contentSections.push(this.homeSection)
 
-          await fetchWelcomePost(headers)
+          await this.fetchWelcomePost(headers)
         } else if (type == 4){
           this.homeSection = {
             sectionName: 'home',
@@ -801,12 +798,30 @@ export default {
 
           await this.fetchMenuPost(headers)
           await this.fetchMenuData(1, 1, this.menuLimit)
-        } else if (type == 6) {
+        } else if (type == 0) {
           sections.push({
             id: 1,
             sectionName: 'contact',
             sectionMenu: 'Contact Preview',
             sectionId: sectionId,
+          })
+
+          await this.fetchContactData(this.headers)
+          this.$nextTick(function() {
+            try {
+              const coordinate = this.location.id != null ? this.location.value.location : {lat: -6.914744, lng: 107.6191}
+              const mapDiv = document.getElementById('map')
+              const mobileMapDiv = document.getElementById('map-mobile')
+              const map = new google.maps.Map(mapDiv, {zoom: 16, center: coordinate, mapTypeId: 'roadmap', disableDefaultUI: true})
+              const mobileMap = new google.maps.Map(mobileMapDiv, {zoom: 16, center: coordinate, mapTypeId: 'roadmap', disableDefaultUI: true})
+              const marker = new google.maps.Marker({position: coordinate, draggable: true, map: map})
+              const mobileMarker = new google.maps.Marker({position: coordinate, draggable: true, map: mobileMap})
+
+              this.map = map
+              this.marker = marker
+            }catch(error) {
+                console.log(error)
+            }
           })
         }
       } else {
@@ -862,7 +877,6 @@ export default {
       this.contentSections = contentSections.concat.apply(contentSections, sections)
     },
     async productCarouselClick(param) {
-      console.log('called')
       this.carouselLoading = true
       let halfScreen = Math.floor(screen.width / 2)
       if (param.clientX > halfScreen){
@@ -968,7 +982,6 @@ export default {
         await this.fetchContactData(this.headers)
         this.$nextTick(function() {
           try {
-            console.log(google)
             const coordinate = this.location.id != null ? this.location.value.location : {lat: -6.914744, lng: 107.6191}
             const mapDiv = document.getElementById('map')
             const mobileMapDiv = document.getElementById('map-mobile')
