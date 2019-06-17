@@ -80,48 +80,31 @@
       >
         <template v-if="section.sectionName == 'home'">
           <v-layout column ma-0 pa-0 justify-center align-center section-content hidden-sm-and-down style="background-color: #9EA1A1;">
-            <v-parallax
+            <v-img
               dark
               :src="welcomePost.cover_image"
               class="cover-image-full hidden-sm-and-down"
-              height="100%">
-                <v-layout column wrap justify-center align-center>
+              height="100%"
+              width="100%"
+            >
+                <v-layout column wrap justify-center align-center fill-height fill-width>
                   <span class="display-3 font-weight-strong mb-5 text-xs-center">{{ welcomePost.title}}</span>
                   <span class="subheading text-xs-center" v-html="welcomePost.html_content" />
                 </v-layout>
-            </v-parallax>
-            <v-parallax
-              dark
-              :src="welcomePost.cover_image"
-              class="cover-image-full hidden-sm-and-up"
-              height="100%">
-                <v-layout column wrap justify-center align-center>
-                  <span class="display-1 font-weight-strong mb-5 text-xs-center text-xs-center">{{ welcomePost.title}}</span>
-                  <span class="subheading text-xs-center" v-html="welcomePost.html_content" />
-                </v-layout>
-            </v-parallax>
+            </v-img>
           </v-layout>
           <v-layout column ma-0 pa-0 justify-center align-center section-content-mobile hidden-sm-and-up style="background-color: #9EA1A1;">
-            <v-parallax
-              dark
-              :src="welcomePost.cover_image"
-              class="cover-image-full hidden-sm-and-down"
-              height="100%">
-                <v-layout column wrap justify-center align-center>
-                  <span class="display-3 font-weight-strong mb-5 text-xs-center">{{ welcomePost.title}}</span>
-                  <span class="subheading text-xs-center" v-html="welcomePost.html_content" />
-                </v-layout>
-            </v-parallax>
-            <v-parallax
+            <v-img
               dark
               :src="welcomePost.cover_image"
               class="cover-image-full hidden-sm-and-up"
-              height="100%">
-                <v-layout column wrap justify-center align-center>
+              height="100%"
+              width="100%">
+                <v-layout column wrap justify-center align-center fill-height fill-width>
                   <span class="display-1 font-weight-strong mb-5 text-xs-center text-xs-center">{{ welcomePost.title}}</span>
                   <span class="subheading text-xs-center" v-html="welcomePost.html_content" />
                 </v-layout>
-            </v-parallax>
+            </v-img>
           </v-layout>
         </template>
         <template v-else-if="section.sectionName == 'product'">
