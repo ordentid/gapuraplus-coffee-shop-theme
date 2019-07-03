@@ -15,7 +15,7 @@
         </v-layout>
       </v-navigation-drawer>
       <v-toolbar
-        :color="'#1C1B20'"
+        :color="'#9F9FA1'"
         :clipped-left="clipped"
         fixed
         app
@@ -48,7 +48,7 @@
         </v-layout>
       </v-toolbar>
       <v-toolbar
-        :color="'#1C1B20'"
+        :color="'#9F9FA1'"
         :clipped-left="clipped"
         fixed
         app
@@ -107,7 +107,7 @@
             </v-img>
           </v-layout>
         </template>
-        <template v-else-if="section.sectionName == 'product'">
+        <template v-else-if="section.sectionName == 'profile'">
           <v-layout column ma-0 pa-0 section-content hidden-sm-and-down style="background-color: #FDFFFD">
             <v-parallax
               dark
@@ -159,50 +159,57 @@
             </v-layout>
           </v-layout>
           <v-layout column ma-0 pa-0 section-content-mobile hidden-sm-and-up style="background-color: #FDFFFD">
-            <v-parallax
-              dark
-              :src="productPost.cover_image"
-              class="ma-0 pa-0 product-parallax"
-              style="height: 35%;">
-                <v-layout column wrap justify-start align-start pa-0 style="height: 100%; width: 100%; max-width: 100%; color: #000000;">
-                  <span class="display-1 px-3 pt-3 font-weight-strong">{{ productPost.title}}</span>
-                  <span class="body-1 pa-3" v-html="productPost.html_content"></span>
-                </v-layout>
-            </v-parallax>
-            <v-layout column wrap pa-0 style="height: 65%; width: 100%; max-width: 100%;">
-              <v-carousel hide-delimiters dark @click.native="productCarouselClick">
-                <v-carousel-item>
-                  <template v-if="!carouselLoading">
-                    <v-layout row fill-height justify-center align-center pa-0 style="width: 100%; max-width: 100%;">
-                      <v-flex
-                        xs9
-                        v-for="featured in featuredList"
-                        :items="featured"
-                        v-bind:key="featured.id"
-                        pa-0
-                        ma-2
-                        style="height: 80%;"
-                      >
-                        <v-card style="height: 100%; width: 100%;">
-                          <v-img :src="featured.image_main" contains height="60%"/>
-                          <v-card-text style="height: 40%; width: 100%; background_color: white;">
-                            <v-layout column wrap fill-width fill-height justify-start align-start pa-0>
-                              <span class="title font-weight-regular mb-2">{{ featured.name }}</span>
-                              <span class="subheading font-weight-light mb-2 text-xs-center">{{ featured.summary }}</span>
-                            </v-layout>
-                          </v-card-text>
-                        </v-card>
-                      </v-flex>
-                    </v-layout>
-                  </template>
-                  <template v-else>
-                    <v-layout column wrap class="tab-content-mobile pa-0 justify-center align-center" style="height: 100%; width: 100%; max-width: 100%;">
-                      <v-progress-circular indeterminate color="grey" style="height: 50%; width: 50%;"></v-progress-circular>
-                    </v-layout>
-                  </template>
-                </v-carousel-item>
-              </v-carousel>
+            <v-layout column wrap pa-0 style="height: 70%; width: 100%; max-width: 100%;">
+              <v-layout column wrap justify-start align-start pa-0 style="height: 40%; width: 100%; max-width: 100%; color: #000000;">
+                <span class="display-1 px-3 pt-3 font-weight-strong">{{ productPost.title}}</span>
+                <span class="body-1 pa-3" v-html="productPost.html_content"></span>
+              </v-layout>
+              <v-layout column wrap justify-start align-start pa-0 style="height: 60%; width: 100%; max-width: 100%; color: #000000;">
+                <v-carousel hide-delimiters flat @click.native="productCarouselClick">
+                  <v-carousel-item>
+                    <template v-if="!carouselLoading">
+                      <v-layout row fill-height justify-center align-center pa-0 style="width: 100%; max-width: 100%;">
+                        <v-flex
+                          xs9
+                          v-for="featured in featuredList"
+                          :items="featured"
+                          v-bind:key="featured.id"
+                          pa-0
+                          ma-2
+                          style="height: 80%;"
+                        >
+                          <v-card style="height: 100%; width: 100%;">
+                            <v-img v-if="featured.image_main != null" :src="featured.image_main" contains height="55%"/>
+                            <v-layout v-else style="height: 55%; width: 100%; background-color: #9F9FA1;"/>
+                            <v-card-text style="height: 45%; width: 100%; background-color: white;" class="pa-0">
+                              <v-layout column wrap fill-width fill-height justify-start align-start pa-2 style="color: black; background-color: white;">
+                                <span class="title font-weight-bold mb-2" style="color: grey;">{{ featured.name }}</span>
+                                <span class="subheading font-weight-light mb-2 text-xs-center">{{ featured.summary }}</span>
+                              </v-layout>
+                            </v-card-text>
+                          </v-card>
+                        </v-flex>
+                      </v-layout>
+                    </template>
+                    <template v-else>
+                      <v-layout column wrap class="tab-content-mobile pa-0 justify-center align-center" style="height: 100%; width: 100%; max-width: 100%;">
+                        <v-progress-circular indeterminate color="grey" style="height: 50%; width: 50%;"></v-progress-circular>
+                      </v-layout>
+                    </template>
+                  </v-carousel-item>
+                </v-carousel>
+              </v-layout>
             </v-layout>
+            <v-img
+              v-if="productPost.cover_image != null"
+              :src="productPost.cover_image"
+              class="product-parallax"
+              height="30%"
+              width="100%"
+              style="background-color: #FDFFFD;"
+              contain
+            />
+            <v-layout v-else column ma-0 pa-0 section-content-mobile hidden-sm-and-up style="background-color: #9F9FA1"/>
           </v-layout>
         </template>
         <template v-else-if="section.sectionName == 'food'">
@@ -227,7 +234,7 @@
                 <v-tabs-slider color="blue" class="minify"/>
                 <v-tab href="#food_tab" class="minify caption resize" style="color: black;" @click="changeTab(1)">
                   Makanan
-                  <v-icon small color="black">fastfood</v-icon>
+                  <v-icon small color="red">fastfood</v-icon>
                 </v-tab>
                 <v-tab href="#drink_tab" class="minify caption ml-1 resize" style="color: black;" @click="changeTab(2)">
                   Minuman
@@ -291,16 +298,10 @@
             </v-layout>
           </v-layout>
           <v-layout wrap column ma-0 pa-0 section-content-mobile hidden-sm-and-up style="background-color: #FDFFFD">
-            <v-parallax
-              dark
-              :src="menuPost.cover_image"
-              class="ma-0 pa-0 product-parallax"
-              style="height: 30%;">
-                <v-layout column wrap ustify-center align-center pa-0 style="height: 100%; max-height: 100%; width: 100%; max-width: 100%; color: #000000;">
-                  <span class="display-1 text-xs-center font-weight-strong pt-3">{{ menuPost.title}}</span>
-                  <span class="body-1 text-xs-center pa-3" v-html="menuPost.html_content"></span>
-                </v-layout>
-            </v-parallax>
+            <v-layout column wrap ustify-center align-center pa-0 style="height: 30%; width: 100%; color: #000000;">
+              <span class="display-1 text-xs-center font-weight-strong pt-3">{{ menuPost.title}}</span>
+              <span class="body-1 text-xs-center pa-3" v-html="menuPost.html_content"></span>
+            </v-layout>
             <v-layout column wrap pa-0 style="height: 70%; max-height:70%; width: 100%; max-width: 100%;">
               <v-tabs
                 color="white"
@@ -308,16 +309,16 @@
                 dark
                 icons-and-text
               >
-                <v-tabs-slider color="blue" class="mobile"/>
+                <v-tabs-slider color="red" class="mobile"/>
                 <v-tab href="#food_tab" class="caption resize mobile" style="color: black; min-width: 50%;" @click="changeTab(1)">
-                  <v-layout row wrap pa-0 pl-2 align-center style="width: 100%; height: 100%;">
-                    <v-icon medium color="black">fastfood</v-icon>
+                  <v-layout row wrap pa-0 pl-2 align-center justify-center style="width: 100%; height: 100%;">
+                    <v-icon medium>fastfood</v-icon>
                     <span class="subheading font-weight-medium">Makanan</span>
                   </v-layout>
                 </v-tab>
                 <v-tab href="#drink_tab" class="caption resize mobile" style="color: black; min-width: 50%;" @click="changeTab(2)">
-                  <v-layout row wrap pa-0 pl-2 align-center style="width: 100%; height: 100%;">
-                    <v-icon medium color="black">local_drink</v-icon>
+                  <v-layout row wrap pa-0 pl-2 align-center justify-center style="width: 100%; height: 100%;">
+                    <v-icon medium>local_drink</v-icon>
                     <span class="subheading font-weight-medium">Minuman</span>
                   </v-layout>
                 </v-tab>
@@ -326,7 +327,7 @@
                     <v-carousel-item class="layout wrap fill-width pa-0 menu-content">
                       <v-layout column wrap style="height: 90%; width: 100%;">
                         <template v-if="!carouselLoading && selectedTab == 1">
-                          <v-layout column wrap class="tab-content-mobile pa-0 justify-center align-start" style="height: 100%; width: 100%; max-width: 100%;">
+                          <v-layout column wrap py-3 px-0 class="tab-content-mobile pa-0 justify-start align-start" style="height: 100%; width: 100%; max-width: 100%;">
                             <v-flex
                               xs4
                               v-for="fnb in fnbList"
@@ -339,13 +340,13 @@
                               style="width: 100%; height: 100%;"
                             >
                               <v-layout row wrap fill-width fill-height>
-                                <v-layout wrap justify-center align-center pa-0 ma-0 style="height: 100%; width: 30%;">
-                                  <v-img contains max-height="100%" max-width="100%" :src="fnb.image_main"></v-img>
+                                <v-layout wrap justify-end align-center pa-0 ma-0 style="height: 100%; width: 30%;">
+                                  <v-img contain height="100%" width="80%" max-width="80%" :src="fnb.image_main"></v-img>
                                 </v-layout>
-                                <v-layout column wrap justify-center align-start pl-2 style="height: 100%; width: 70%;">
-                                  <span class="body-2 font-weight-bold text-xs-left">{{ fnb.name }}</span>
-                                  <span class="caption font-weight-regular text-xs-left">{{ fnb.summary }}</span>
-                                  <span class="body-2 font-weight-medium text-xs-left">{{ fnb.sell_price }}</span>
+                                <v-layout column wrap justify-center align-start pl-3 style="height: 100%; width: 70%;">
+                                  <span class="body-2 font-weight-bold text-xs-left pb-2">{{ fnb.name }}</span>
+                                  <span class="caption font-weight-regular text-xs-left pb-2">{{ fnb.summary }}</span>
+                                  <span class="body-2 font-weight-medium text-xs-left pb-2">IDR {{ fnb.price }}</span>
                                 </v-layout>
                               </v-layout>
                             </v-flex>
@@ -357,18 +358,20 @@
                           </v-layout>
                         </template>
                       </v-layout>
-                      <v-layout row justify-center align-center style="height: 10%; width: 100%;">
-                        <v-btn flat style="background-color: rgba(0, 0, 0, 0.0)">
-                          <v-icon large @click="carouselNavigation(1, 0)">
-                            keyboard_arrow_left
-                          </v-icon>
-                        </v-btn>
-                        <v-btn flat style="background-color: rgba(0, 0, 0, 0.0)">
-                          <v-icon large @click="carouselNavigation(1, 1)">
-                            keyboard_arrow_right
-                          </v-icon>
-                        </v-btn>
-                      </v-layout>
+                      <template v-if="meta.total > menuLimit">
+                        <v-layout row justify-center align-center style="height: 10%; width: 100%;">
+                          <v-btn flat style="background-color: rgba(0, 0, 0, 0.0)">
+                            <v-icon large @click="carouselNavigation(1, 0)">
+                              keyboard_arrow_left
+                            </v-icon>
+                          </v-btn>
+                          <v-btn flat style="background-color: rgba(0, 0, 0, 0.0)">
+                            <v-icon large @click="carouselNavigation(1, 1)">
+                              keyboard_arrow_right
+                            </v-icon>
+                          </v-btn>
+                        </v-layout>
+                      </template>
                     </v-carousel-item>
                   </v-carousel>
                 </v-tab-item>
@@ -377,7 +380,7 @@
                     <v-carousel-item class="layout wrap fill-width pa-0 menu-content">
                       <v-layout column style="height: 90%; width: 100%;">
                         <template v-if="!carouselLoading && selectedTab == 2">
-                          <v-layout column wrap class="tab-content-mobile pa-0 justify-start align-start" style="height: 100%; width: 100%; max-width: 100%;">
+                          <v-layout column wrap px-0 py-3 class="tab-content-mobile pa-0 justify-start align-start" style="height: 100%; width: 100%; max-width: 100%;">
                             <v-flex
                               xs4
                               v-for="fnb in fnbList"
@@ -390,13 +393,13 @@
                               style="width: 100%; height: 100%;"
                             >
                               <v-layout row wrap fill-height fill-width>
-                                <v-layout wrap justify-center align-center pa-0 ma-0 style="height: 100%; width: 30%;">
-                                  <v-img contains max-height="100%" max-width="100%" :src="fnb.image_main"></v-img>
+                                <v-layout wrap justify-end align-center pa-0 ma-0 style="height: 100%; width: 30%;">
+                                  <v-img contains height="100%" width="80%" max-height="80%" :src="fnb.image_main"></v-img>
                                 </v-layout>
-                                <v-layout column wrap justify-center align-start pl-2 style="height: 100%; width: 70%;">
-                                  <span class="body-2 font-weight-bold text-xs-left">{{ fnb.name }}</span>
-                                  <span class="caption font-weight-regular text-xs-left">{{ fnb.summary }}</span>
-                                  <span class="body-2 font-weight-medium text-xs-left">{{ fnb.sell_price }}</span>
+                                <v-layout column wrap justify-center align-start pl-3 style="height: 100%; width: 70%;">
+                                  <span class="body-2 font-weight-bold text-xs-left pb-2">{{ fnb.name }}</span>
+                                  <span class="caption font-weight-regular text-xs-left pb-2">{{ fnb.summary }}</span>
+                                  <span class="body-2 font-weight-medium text-xs-left pb-2">IDR {{ fnb.price }}</span>
                                 </v-layout>
                               </v-layout>
                             </v-flex>
@@ -408,18 +411,20 @@
                           </v-layout>
                         </template>
                       </v-layout>
-                      <v-layout row justify-center align-center style="height: 10%; width: 100%;">
-                        <v-btn flat style="background-color: rgba(0, 0, 0, 0.0)">
-                          <v-icon large @click="carouselNavigation(2, 0)">
-                            keyboard_arrow_left
-                          </v-icon>
-                        </v-btn>
-                        <v-btn flat style="background-color: rgba(0, 0, 0, 0.0)">
-                          <v-icon large @click="carouselNavigation(2, 1)">
-                            keyboard_arrow_right
-                          </v-icon>
-                        </v-btn>
-                      </v-layout>
+                      <template v-if="meta.total > menuLimit">
+                        <v-layout row justify-center align-center style="height: 10%; width: 100%;">
+                          <v-btn flat style="background-color: rgba(0, 0, 0, 0.0)">
+                            <v-icon large @click="carouselNavigation(2, 0)">
+                              keyboard_arrow_left
+                            </v-icon>
+                          </v-btn>
+                          <v-btn flat style="background-color: rgba(0, 0, 0, 0.0)">
+                            <v-icon large @click="carouselNavigation(2, 1)">
+                              keyboard_arrow_right
+                            </v-icon>
+                          </v-btn>
+                        </v-layout>
+                      </template>
                     </v-carousel-item>
                   </v-carousel>
                 </v-tab-item>
@@ -427,11 +432,76 @@
             </v-layout>
           </v-layout>
         </template>
+        <template v-else-if="section.sectionName == 'location'">
+          <v-layout column ma-0 pa-0 justify-center align-center section-content hidden-sm-and-down style="background-color: #FDFFFD;">
+            <template v-if="locationPost.cover_image != null">
+              <v-img :src="locationPost.cover_image" width="100%" height="10%" />
+            </template>
+            <template v-else>
+              <v-layout style="width: 100%; height: 10%; background-color: #9EA1A1;"/>
+            </template>
+            <v-layout pa-0 ma-0 justify-end align-center style="height: 40%; width: 100%;">
+              <!-- <div id="map"/> -->
+            </v-layout>
+            <v-layout column wrap style="width: 100%; height 40%; background-color: #FDFFFD;">
+              <span class="title font-weight-strong pb-3 text-xs-left text-xs-left">{{ locationPost.title }}</span>
+            </v-layout>
+            <v-layout column wrap style="width: 100%; height: 10%; background-color: #FDFFFD">
+              <span class="body-2 font-weight-regular">Kirimkan email ke kami untuk pertanyaan lebih lanjut</span>
+              <v-btn :href="config.mailLink" color="#707070" style="color: #FFFFFF; border-radius: 10px;">Hubungi Kami</v-btn>
+            </v-layout>
+          </v-layout>
+          <v-layout column ma-0 pa-0 justify-center align-center section-content-mobile hidden-sm-and-up style="background-color: #FDFFFD;">
+            <v-layout column wrap style="height: 100%; width: 100%;">
+              <template v-if="locationPost.cover_image != null">
+                <v-img :src="locationPost.cover_image" width="100%" height="10%" />
+              </template>
+              <template v-else>
+                <v-layout style="width: 100%; height: 10%; background-color: #9F9FA1;"/>
+              </template>
+              <v-layout pa-0 ma-0 justify-end align-center style="height: 40%; width: 100%;">
+                <div id="map" style="height: 100%; width: 100%;"/>
+              </v-layout>
+              <v-layout row wrap style="width: 100%; height: 35%;">
+                <v-layout wrap style="height: 15%; width: 100%;">
+                  <span class="title font-weight-strong px-4 pt-3 pb-0 text-xs-left" style="color: #707070;">{{ locationPost.title }}</span>
+                </v-layout>
+                <v-carousel hide-delimiters hide-controls class="location">
+                  <v-carousel-item
+                    v-for="(section, key) in locationSection"
+                    :key="key"
+                    class="fill-width px-4 pt-3 pb-1 menu-content"
+                  >
+                    <v-layout column wrap style="width: 100%; height: 100%;">
+                      <v-flex
+                        xs3
+                        v-for="(sectionItem, itemKey) in section"
+                        :items="sectionItem"
+                        v-bind:key="itemKey"
+                        pa-0
+                        ma-0
+                        style="width: 100%;"
+                      >
+                        <v-layout wrap style="width: 100%; height: 100%;">
+                          <span class="subheading font-weight-regular text-xs-left" style="width: 100%; height: 100%; color: #909090;">{{ sectionItem.name }}  |  {{ sectionItem.full_address }}</span>
+                        </v-layout>
+                      </v-flex>
+                    </v-layout>
+                  </v-carousel-item>
+                </v-carousel>
+              </v-layout>
+              <v-layout row wrap justify-center align-center py-2 style="width: 100%; height: 15%; background-color: #24232A;">
+                <span class="subheading font-weight-regular" style="color: #E4E4E4;">Kirimkan email ke kami untuk pertanyaan lebih lanjut</span>
+                <v-btn small :href="config.mailLink" color="#707070" style="color: #E4E4E4; border-radius: 10px;">Hubungi Kami</v-btn>
+              </v-layout>
+            </v-layout>
+          </v-layout>
+        </template>
         <template v-else-if="section.sectionName == 'contact'">
           <v-layout v-if="!isLoading" column ma-0 pa-0 section-content hidden-sm-and-down style="background-color: #24232A">
             <v-layout row ma-0 pa-0 justify-center align-center style="height: 50%; width: 100%; max-width: 100%; background-color: #A0A0A0;">
               <v-layout pa-0 ma-0 justify-end align-center style="height: 100%; width: 50%;">
-                <div id="map" />
+                <!-- <div id="map" /> -->
               </v-layout>
               <v-layout column pa-0 ma-0 justify-center align-start style="height: 100%; width: 50%">
                 <v-parallax
@@ -604,6 +674,9 @@ export default {
     menuPost() {
       return this.$store.state.menuPost
     },
+    locationPost() {
+      return this.$store.state.locationPost
+    },
     meta() {
       return this.$store.state.meta
     },
@@ -612,6 +685,28 @@ export default {
     },
     fnbList() {
       return this.$store.state.fnbList
+    },
+    locationList() {
+      return this.$store.state.locationList
+    },
+    locationSection() {
+      let locationList = this.locationList
+      let locationSection = []
+      let locationSectionList = []
+
+      locationList.forEach(element => {
+        locationSection.push(element)
+
+        if (locationSection.length == 4){
+          locationSectionList.push(locationSection)
+          locationSection = []
+        }
+      })
+      locationSectionList.push(locationSection)
+      console.log('location section list', locationSectionList)
+      console.log('location section', locationSection)
+      console.log('location', locationList)
+      return locationSectionList
     },
     location() {
       let location = Object.assign({}, this.$store.state.location)
@@ -729,6 +824,8 @@ export default {
       contentSections: [],
       homeSection: {},
       sideMenu: [],
+      latitude: 0,
+      longitude: 0,
       page: 1,
       selectedTab: 1,
     }
@@ -819,66 +916,61 @@ export default {
           })
 
           await this.fetchContactData(this.headers)
-          this.$nextTick(function() {
-            try {
-              const coordinate = this.location.id != null ? this.location.value.location : {lat: -6.914744, lng: 107.6191}
-              const mapDiv = document.getElementById('map')
-              const mobileMapDiv = document.getElementById('map-mobile')
-              const map = new google.maps.Map(mapDiv, {zoom: 16, center: coordinate, mapTypeId: 'roadmap', disableDefaultUI: true})
-              const mobileMap = new google.maps.Map(mobileMapDiv, {zoom: 16, center: coordinate, mapTypeId: 'roadmap', disableDefaultUI: true})
-              const marker = new google.maps.Marker({position: coordinate, draggable: true, map: map})
-              const mobileMarker = new google.maps.Marker({position: coordinate, draggable: true, map: mobileMap})
-
-              this.map = map
-              this.marker = marker
-            }catch(error) {
-                console.log(error)
-            }
-          })
+          initMap(0, 0)
         }
       } else {
         await this.$store.dispatch('fetchConfig', headers)
         let config = this.config
 
-        if (config.use_home){
+        if (config.home.active){
           this.homeSection = {
             id: 1,
             sectionName: 'home',
-            sectionMenu: config.home_menu,
+            sectionMenu: config.home.menu_name,
             sectionId: sectionId,
-            useIcon: config.use_home_icon,
-            iconUrl: config.home_icon
+            useIcon: config.home.use_icon,
+            iconUrl: config.home.menu_icon
           }
 
           contentSections.push(this.homeSection)
           sectionId++
         }
 
-        if (config.use_products){
+        if (config.profile.active){
           sections.push({
             id: 2,
-            sectionName: 'product',
-            sectionMenu: config.product_menu,
+            sectionName: 'profile',
+            sectionMenu: config.profile.menu_name,
             sectionId: sectionId,
           })
           sectionId++
         }
 
-        if (config.use_food){
+        if (config.food.active){
           sections.push({
             id: 3,
             sectionName: 'food',
-            sectionMenu: config.food_menu,
+            sectionMenu: config.food.menu_name,
             sectionId: sectionId,
           })
           sectionId++
         }
 
-        if (config.use_contacts){
+        if (config.location.active){
           sections.push({
             id: 4,
+            sectionName: 'location',
+            sectionMenu: config.location.menu_name,
+            sectionId: sectionId,
+          })
+          sectionId++
+        }
+
+        if (config.contact.active){
+          sections.push({
+            id: 5,
             sectionName: 'contact',
-            sectionMenu: config.contact_menu,
+            sectionMenu: config.contact.menu_name,
             sectionId: sectionId,
           })
           sectionId++
@@ -891,6 +983,23 @@ export default {
     async changeTab(type) {
       this.page = 1
       await this.fetchMenuData(type, this.page, this.menuLimit)
+    },
+    initMap(latitude, longitude) {
+      this.$nextTick(function() {
+      try {
+        const coordinate = {lat: latitude, lng: longitude}
+        if (this.map == null){
+          const mapDiv = document.getElementById('map')
+          const map = new google.maps.Map(mapDiv, {zoom: 16, center: coordinate, mapTypeId: 'roadmap', disableDefaultUI: true})
+          this.map = map
+        }
+
+        const marker = new google.maps.Marker({position: coordinate, draggable: false, map: this.map})
+        this.marker = marker
+      }catch(error) {
+          console.log(error)
+      }
+    })
     },
     async productCarouselClick(param) {
       this.carouselLoading = true
@@ -952,12 +1061,25 @@ export default {
         }
       }
     },
+    locationCardClick(location) {
+      let latitude = location.latitude
+      let longitude = location.longitude
+      this.initMap(latitude, longitude)
+    },
     async fetchWelcomePost(headers) {
       await this.$store.dispatch('fetchWelcomePost', headers)
       this.isLoading = false
     },
     async fetchProductPost(headers) {
       await this.$store.dispatch('fetchProductPost', headers)
+      this.isLoading = false
+    },
+    async fetchMenuPost(headers) {
+      await this.$store.dispatch('fetchMenuPost', headers)
+      this.isLoading = false
+    },
+    async fetchLocationPost(headers) {
+      await this.$store.dispatch('fetchLocationPost', headers)
       this.isLoading = false
     },
     async fetchProductData(page, limit, headers) {
@@ -967,10 +1089,6 @@ export default {
         headers: headers
       })
       this.carouselLoading = false
-    },
-    async fetchMenuPost(headers) {
-      await this.$store.dispatch('fetchMenuPost', headers)
-      this.isLoading = false
     },
     async fetchMenuData(type, page, limit) {
       this.carouselLoading = true
@@ -986,9 +1104,31 @@ export default {
       this.carouselLoading = false
       this.selectedTab = type
     },
+    async fetchLocationData(){
+      this.carouselLoading = true
+
+      try {
+        await this.$store.dispatch('fetchLocationList', this.headers)
+        let result = this.$store.state.locationList
+        let latitude = 0
+        let longitude = 0
+
+        result.forEach((element, key) => {
+          if (key == 0){
+            latitude = element.latitude
+            longitude = element.longitude
+          }
+        })
+        this.initMap(latitude, longitude)
+      }
+      catch(error) {
+        console.log(error)
+      }
+      this.carouselLoading = false
+    },
     async fetchContactData(headers) {
       let request = {
-        headers: headers
+        headers: headersauto
       }
 
       await this.$store.dispatch('fetchContactData', request)
@@ -1000,35 +1140,28 @@ export default {
       if (newIndex == 0){
         this.isLoading = true
         await this.fetchWelcomePost(this.headers)
-      } else if (newIndex == 1) {
+      } 
+      else if (newIndex == 1) {
         this.isLoading = true
         this.carouselLoading = true
         await this.fetchProductPost(this.headers)
         await this.fetchProductData(1, this.productLimit, this.headers)
-      } else if (newIndex == 2) {
+      } 
+      else if (newIndex == 2) {
         this.isLoading = true
         this.carouselLoading = true
         await this.fetchMenuPost(this.headers)
         await this.fetchMenuData(1, 1, this.menuLimit)
-      } else if (newIndex == 3){
+      }
+      else if (newIndex == 3) {
+        this.isLoading = true
+        this.carouselLoading = true
+        await this.fetchLocationPost(this.headers)
+        await this.fetchLocationData(this.headers)
+      }
+      else if (newIndex == 4){
         this.isLoading = true
         await this.fetchContactData(this.headers)
-        this.$nextTick(function() {
-          try {
-            const coordinate = this.location.id != null ? this.location.value.location : {lat: -6.914744, lng: 107.6191}
-            const mapDiv = document.getElementById('map')
-            const mobileMapDiv = document.getElementById('map-mobile')
-            const map = new google.maps.Map(mapDiv, {zoom: 16, center: coordinate, mapTypeId: 'roadmap', disableDefaultUI: true})
-            const mobileMap = new google.maps.Map(mobileMapDiv, {zoom: 16, center: coordinate, mapTypeId: 'roadmap', disableDefaultUI: true})
-            const marker = new google.maps.Marker({position: coordinate, draggable: true, map: map})
-            const mobileMarker = new google.maps.Marker({position: coordinate, draggable: true, map: mobileMap})
-
-            this.map = map
-            this.marker = marker
-          }catch(error) {
-              console.log(error)
-          }
-        })
       }
     }
   }
@@ -1140,6 +1273,12 @@ html {
   max-width: 100%;
   padding: 0 0;
 }
+.v-tabs__item--active {
+  color: red;
+}
+.theme--dark.v-icon {
+  color: inherit;
+}
 .v-window, .tab-content {
   height: 90%;
 }
@@ -1160,6 +1299,12 @@ html {
 }
 .v-carousel__item, .menu-content {
   height: 100% !important;
+}
+.v-carousel, .location {
+  height: 85% !important;
+  width: 100%;
+  box-shadow: none;
+  background-color: #FDFFFD;
 }
 .clickable {
   cursor: pointer;

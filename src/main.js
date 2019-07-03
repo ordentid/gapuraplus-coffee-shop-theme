@@ -39,9 +39,11 @@ export default function (Vue, { router, head, isClient, appOptions }) {
       profilePost: {},
       productPost: {},
       menuPost: {},
+      locationPost: {},
       meta: {},
       featuredList: [],
       fnbList: [],
+      locationList: [],
       location: {},
       address: {},
       socialMedia: [],
@@ -63,6 +65,9 @@ export default function (Vue, { router, head, isClient, appOptions }) {
       setMenuPost(state, val) {
         state.menuPost = val
       },
+      setLocationPost(state, val) {
+        state.locationPost = val
+      },
       setFeaturedList(state, val) {
         state.featuredList = val
       },
@@ -71,6 +76,9 @@ export default function (Vue, { router, head, isClient, appOptions }) {
       },
       setFnbList(state, val) {
         state.fnbList = val
+      },
+      setLocationList(state, val) {
+        state.locationList = val
       },
       setLocation(state, val) {
         state.location = val
@@ -173,10 +181,29 @@ export default function (Vue, { router, head, isClient, appOptions }) {
           return
         }
       },
+      async fetchLocationPost({commit}, headers) {
+        let url = apiUrl + '/api/post/type/single/6'
+
+        try {
+          let response = await axios.get(url, {headers: headers})
+          console.log(response)
+          if (response.data.data != null){
+            console.log(response.data.data)
+            commit('setLocationPost', response.data.data)
+          } else {
+            commit('setLocationPost', {
+              id: 1,
+              title: 'Default Location',
+            })
+          }
+        }catch(error) {
+          console.log(error)
+        }
+      },
       async fetchFeaturedList({commit}, params) {
         let page = params.page
         let limit = params.limit
-        let url = apiUrl + '/api/product?type=0&orderBy=created_at&page=' + page + '&limit=' + limit
+        let url = apiUrl + '/api/item?type=0&orderBy=created_at&page=' + page + '&limit=' + limit
 
         try {
           let response = await axios.get(url, {headers: params.headers})
@@ -213,7 +240,7 @@ export default function (Vue, { router, head, isClient, appOptions }) {
         let limit = params.limit
         let page = params.page
         let headers = params.headers
-        let url = apiUrl + '/api/product?type=' + type + '&page=' + page + '&limit=' + limit
+        let url = apiUrl + '/api/item?type=' + type + '&page=' + page + '&limit=' + limit
 
         let response = await axios.get(url, {headers: headers})        
         let data = response.data.data
@@ -239,6 +266,44 @@ export default function (Vue, { router, head, isClient, appOptions }) {
         }
         
         commit('setFnbList', data)
+        commit('setMeta', meta)
+      },
+      async fetchLocationList({commit}, headers) {
+        let url = apiUrl + '/api/location'
+
+        let response = await axios.get(url, {headers: headers})        
+        let data = response.data.data
+        let meta = response.data.meta
+
+        if (data.length == 0){
+          for (let i = 1; i <= 4; i++){
+            data.push({
+              id: i,
+              name: 'Default Location ' + i,
+              full_address: 'Default Address ' + i,
+              latitude: -6.914744,
+              longitude: 107.6191
+            })
+          }
+
+          meta = {
+            lastPage: 1,
+            page: page,
+            perPage: limit,
+            total: limit,
+          }
+        }
+
+        data.forEach((key, element) => {
+          element = Object.assign({}, element)
+          if (key == 0){
+            element.selected = true
+          } else {
+            element.selected = false
+          }
+        })
+        
+        commit('setLocationList', data)
         commit('setMeta', meta)
       },
       async fetchContactData({commit}, params) {
