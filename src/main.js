@@ -312,14 +312,11 @@ export default function (Vue, { router, head, isClient, appOptions }) {
 
         let response = await axios.get(url, {headers: headers})
         let contactList = response.data.data
-        let location = {}
         let address = {}
         let socialMedia = []
         let operationalHour = []
         contactList.forEach(element => {
-          if (element.type == 'location'){
-            location = element
-          } else if (element.type == 'address'){
+          if (element.type == 'address'){
             address = element
           } else if (element.type == 'social_media'){
             socialMedia.push(element)
@@ -328,7 +325,6 @@ export default function (Vue, { router, head, isClient, appOptions }) {
           }
         })
 
-        commit('setLocation', location)
         commit('setAddress', address)
         commit('setSocialMedia', socialMedia)
         commit('setOperationalHours', operationalHour)

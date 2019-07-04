@@ -481,6 +481,7 @@
                         pa-0
                         ma-0
                         style="width: 100%;"
+                        @click="locationCardClick(sectionItem)"
                       >
                         <v-layout wrap style="width: 100%; height: 100%;">
                           <span class="subheading font-weight-regular text-xs-left" style="width: 100%; height: 100%; color: #909090;">{{ sectionItem.name }}  |  {{ sectionItem.full_address }}</span>
@@ -499,9 +500,9 @@
         </template>
         <template v-else-if="section.sectionName == 'contact'">
           <v-layout v-if="!isLoading" column ma-0 pa-0 section-content hidden-sm-and-down style="background-color: #24232A">
-            <v-layout row ma-0 pa-0 justify-center align-center style="height: 50%; width: 100%; max-width: 100%; background-color: #A0A0A0;">
+            <!-- <v-layout row ma-0 pa-0 justify-center align-center style="height: 50%; width: 100%; max-width: 100%; background-color: #A0A0A0;">
               <v-layout pa-0 ma-0 justify-end align-center style="height: 100%; width: 50%;">
-                <!-- <div id="map" /> -->
+                <div id="map" />
               </v-layout>
               <v-layout column pa-0 ma-0 justify-center align-start style="height: 100%; width: 50%">
                 <v-parallax
@@ -514,11 +515,7 @@
                     </v-layout>
                 </v-parallax>
               </v-layout>
-            </v-layout>
-            <v-layout row ma-0 pa-0 justify-center align-center style="height: 10%; width: 100%; max-width: 100%; color: #FFFFFF;">
-              <span class="body-2 font-weight-regular">Kirimkan email ke kami untuk pertanyaan lebih lanjut</span>
-              <v-btn :href="config.mailLink" color="#707070" style="color: #FFFFFF; border-radius: 10px;">Hubungi Kami</v-btn>
-            </v-layout>
+            </v-layout> -->
             <v-layout row ma-0 pa-0 pt-2 justify-center align-center style="height: 35%; width: 100%; max-width: 100%;">
               <v-flex
                 xs4
@@ -539,7 +536,7 @@
               >
                 <v-layout column fill-height fill-width justify-start align-center style="color: #FFFFFF;">
                   <span class="title font-weight-regular text-xs-center">Jam Operasional</span>
-                  <span class="subheading font-weight-light text-xs-center mt-2" v-html="operationalHour.operationalHourStrView"></span>
+                  <!-- <span class="subheading font-weight-light text-xs-center mt-2" v-html="operationalHour.operationalHourStrView"></span> -->
                 </v-layout>
               </v-flex>
               <v-flex
@@ -563,7 +560,7 @@
             </v-layout>
           </v-layout>
           <v-layout v-if="!isLoading" column ma-0 pa-0 section-content-mobile hidden-sm-and-up style="background-color: #24232A">
-            <v-layout column ma-0 pa-0 justify-center align-center style="height: 40%; width: 100%; max-width: 100%; background-color: #A0A0A0;">
+            <!-- <v-layout column ma-0 pa-0 justify-center align-center style="height: 40%; width: 100%; max-width: 100%; background-color: #A0A0A0;">
               <v-layout pa-0 ma-0 justify-end align-center style="height: 50%; width: 100%;">
                 <div id="map-mobile" style="height: 100%; width: 100%;"/>
               </v-layout>
@@ -578,48 +575,82 @@
                     </v-layout>
                 </v-parallax>
               </v-layout>
-            </v-layout>
-            <v-layout column wrap ma-0 pa-0 justify-center align-center style="height: 10%; width: 100%; max-width: 100%; color: #FFFFFF;">
+            </v-layout> -->
+            <!-- <v-layout column wrap ma-0 pa-0 justify-center align-center style="height: 10%; width: 100%; max-width: 100%; color: #FFFFFF;">
               <span class="subheading font-weight-regular px-2">Kirimkan email ke kami untuk pertanyaan lebih lanjut</span>
               <v-btn :href="config.mailLink" color="#707070" style="color: #FFFFFF; height: 40%; border-radius: 10px;">Hubungi Kami</v-btn>
-            </v-layout>
-            <v-layout column ma-0 pa-0 pt-2 justify-center align-center style="height: 50%; width: 100%; max-width: 100%;">
+            </v-layout> -->
+            <v-layout column ma-0 py-4 justify-center align-center style="height: 90%; width: 100%; max-width: 100%;">
               <v-flex
                 xs4
                 pa-2
                 ma-0
+                style="width: 100%;"
               >
                 <v-layout column fill-height fill-width justify-start align-center style="color: #FFFFFF;">
-                  <span class="title font-weight-regular text-xs-center">Alamat</span>
-                  <span class="subheading font-weight-light text-xs-center mt-2">{{ address.value.addressStr }}</span>
+                  <span class="title font-weight-medium text-xs-center" style="letter-spacing: 2px !important;">ALAMAT</span>
+                  <span class="subheading font-weight-light text-xs-center mt-4 mx-3" style="letter-spacing: 1px !important;">
+                    {{ address.value.address }}
+                  </span>
+                  <span class="subheading font-weight-light text-xs-center mt-2 mx-3" style="letter-spacing: 1px !important;">
+                    {{ address.value.subdistrict }}, {{ address.value.district }}, {{ address.value.province }}. {{ address.value.zipcode}}
+                  </span>
                 </v-layout>
               </v-flex>
               <v-flex
                 xs4
                 pa-2
                 ma-0
+                style="width: 100%;"
               >
                 <v-layout column fill-height fill-width justify-start align-center style="color: #FFFFFF;">
-                  <span class="title font-weight-regular text-xs-center">Jam Operasional</span>
-                  <span class="subheading font-weight-light text-xs-center mt-2" v-html="operationalHour.operationalHourStrView"></span>
+                  <span class="title font-weight-medium text-xs-center" style="letter-spacing: 2px !important;">JAM OPERASIONAL</span>
+                  <template
+                    v-for="(item, i) in  operationalHour.operationalHourStr"
+                  >
+                    <v-layout
+                      :key="i"
+                      coloumn
+                      wrap
+                      justify-center
+                      align-center
+                      style="width: 100%; height: 20px;"
+                    >
+                      <v-flex
+                        xs4
+                        pa-0
+                        ma-0
+                      >
+                        <span class="subheading font-weight-light text-xs-left mt-2" style="letter-spacing: 1px !important;">{{ item.daysStr }}</span>
+                      </v-flex>
+                      <v-flex
+                        xs4
+                        pa-0
+                        ma-0
+                      >
+                        <span class="subheading font-weight-light text-xs-center mt-2" style="letter-spacing: 1px !important;">{{ item.openHourStr }}</span>
+                      </v-flex>
+                    </v-layout>
+                  </template>
                 </v-layout>
               </v-flex>
               <v-flex
                 xs4
                 pa-2
                 ma-0
+                style="width: 100%;"
               >
                 <v-layout column fill-height fill-width justify-start align-center style="color: #FFFFFF;">
-                  <span class="title font-weight-regular text-xs-center">Media Sosial</span>
-                  <v-layout row wrap fill-width justify-center align-start>
+                  <span class="title font-weight-medium text-xs-center" style="letter-spacing: 2px !important;">MEDIA SOSIAL</span>
+                  <v-layout row wrap fill-width justify-center align-center>
                     <template v-for="(item, i) in socialMedia">
-                        <v-img :key="i" :src="item.value.icon_src" @click="goToPage(item.value.value)" height="25px" width="25px" contain class="ma-2"></v-img>
+                        <v-img :key="i" :src="item.value.icon_src" @click="goToPage(item.value.value)" height="25px" width="25px" contain class="my-2 mx-3"></v-img>
                     </template>
                   </v-layout>
                 </v-layout>
               </v-flex>
             </v-layout>
-            <v-layout pa-0 ma-0 justify-center align-center style="height: 5%; width: 100%; max-width: 100%; background-color: #1C1B20; color: #FFFFFF;">
+            <v-layout pa-0 ma-0 justify-center align-center style="height: 10%; width: 100%; max-width: 100%; background-color: #1C1B20; color: #FFFFFF;">
               <span class="caption font-weight-bold text-xs-center">Created by Ordent, Geared Up with Gapura</span>
             </v-layout>
           </v-layout>
@@ -703,25 +734,11 @@ export default {
         }
       })
       locationSectionList.push(locationSection)
-      console.log('location section list', locationSectionList)
-      console.log('location section', locationSection)
-      console.log('location', locationList)
       return locationSectionList
-    },
-    location() {
-      let location = Object.assign({}, this.$store.state.location)
-      if (location.id == null){
-        let value = {
-          description: 'Default Location Description',
-          name: 'Default Location'
-        }
-        location.value = value
-      }
-
-      return location
     },
     address() {
       let address = Object.assign({}, this.$store.state.address)
+      console.log('address', address)
       if (address.id == null){
         let addressStr = 'Default Address, Default Subdistrict, Default District. Default Province. 11221'
         let value = {
@@ -730,10 +747,8 @@ export default {
         address.value = value
       } else {
         let addressStr = address.value.address + ', ' + address.value.subdistrict + ', ' + address.value.district + ', ' + address.value.province + '. ' + address.value.zipcode
-        let value = {
-          addressStr: addressStr
-        }
-        address.value = value
+        
+        address.value.addressStr = addressStr
       }
 
       return address
@@ -767,33 +782,35 @@ export default {
     },
     operationalHour() {
       let operationalHour = Object.assign([], this.$store.state.operationalHours)
-      let operationalHourStrView = ''
+      let operationalHourStr = []
 
       operationalHour.forEach(element => {
         element.value.forEach(elementValue => {
-          operationalHourStrView += elementValue.open_hour + ' - ' + elementValue.close_hour + ' '
-
+          let openHourStr = elementValue.open_hour + ' - ' + elementValue.close_hour
+          let daysStr = ''
           let firstFlag = true
+
           elementValue.days.forEach((elementChild, index) => {
               if (elementChild.value){
                   if (firstFlag){
-                      operationalHourStrView += elementChild.text
+                      daysStr += elementChild.text
                       firstFlag = false
                   }
 
                   if (index < (elementValue.days.length - 1)){
                       if (!elementValue.days[index + 1].value){
-                          operationalHourStrView += '-' + elementChild.text + ' '
+                          daysStr += '-' + elementChild.text + ' '
                           firstFlag = true
                       }
                   }
               }
           })
-          operationalHourStrView += '<br/>'
+          operationalHourStr.push({'openHourStr': openHourStr, 'daysStr': daysStr})
         })
       })
 
-      operationalHour.operationalHourStrView = operationalHourStrView
+      operationalHour.operationalHourStr = operationalHourStr
+      console.log('operational', operationalHour)
       return operationalHour
     }
   },
@@ -916,7 +933,7 @@ export default {
           })
 
           await this.fetchContactData(this.headers)
-          initMap(0, 0)
+          this.initMap(0, 0)
         }
       } else {
         await this.$store.dispatch('fetchConfig', headers)
@@ -987,12 +1004,11 @@ export default {
     initMap(latitude, longitude) {
       this.$nextTick(function() {
       try {
+        console.log('called', document.getElementById('map'))
         const coordinate = {lat: latitude, lng: longitude}
-        if (this.map == null){
-          const mapDiv = document.getElementById('map')
-          const map = new google.maps.Map(mapDiv, {zoom: 16, center: coordinate, mapTypeId: 'roadmap', disableDefaultUI: true})
-          this.map = map
-        }
+        const mapDiv = document.getElementById('map')
+        const map = new google.maps.Map(mapDiv, {zoom: 16, center: coordinate, mapTypeId: 'roadmap', disableDefaultUI: true})
+        this.map = map
 
         const marker = new google.maps.Marker({position: coordinate, draggable: false, map: this.map})
         this.marker = marker
@@ -1047,7 +1063,6 @@ export default {
     },
     async carouselNavigation(type, navigation) {
       if (!this.carouselLoading){
-        console.log('called')
         if (navigation > 0){
           if (this.page < this.meta.lastPage){
             this.page++
@@ -1062,6 +1077,7 @@ export default {
       }
     },
     locationCardClick(location) {
+      console.log('clicked', location)
       let latitude = location.latitude
       let longitude = location.longitude
       this.initMap(latitude, longitude)
@@ -1128,7 +1144,7 @@ export default {
     },
     async fetchContactData(headers) {
       let request = {
-        headers: headersauto
+        headers: headers
       }
 
       await this.$store.dispatch('fetchContactData', request)
