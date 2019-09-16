@@ -207,9 +207,8 @@
               height="30%"
               width="100%"
               style="background-color: #FDFFFD;"
-              contain
             />
-            <v-layout v-else column ma-0 pa-0 section-content-mobile hidden-sm-and-up style="background-color: #9F9FA1"/>
+            <v-layout v-else column ma-0 pa-0 hidden-sm-and-up style="background-color: #9F9FA1; width: 100%; height: 30%;"/>
           </v-layout>
         </template>
         <template v-else-if="section.sectionName == 'food'">
@@ -463,14 +462,14 @@
                 <div id="map" style="height: 100%; width: 100%;"/>
               </v-layout>
               <v-layout row wrap style="width: 100%; height: 35%;">
-                <v-layout wrap style="height: 15%; width: 100%;">
-                  <span class="title font-weight-strong px-4 pt-3 pb-0 text-xs-left" style="color: #707070;">{{ locationPost.title }}</span>
+                <v-layout wrap style="height: 15%; width: 100%;" class="px-4 py-2">
+                  <span class="title font-weight-strong text-xs-left" style="color: #707070;">{{ locationPost.title }}</span>
                 </v-layout>
-                <v-carousel hide-delimiters hide-controls class="location">
+                <v-carousel hide-delimiters hide-controls class="location px-4">
                   <v-carousel-item
                     v-for="(section, key) in locationSection"
                     :key="key"
-                    class="fill-width px-4 pt-3 pb-1 menu-content"
+                    class="fill-width menu-content py-2"
                   >
                     <v-layout column wrap style="width: 100%; height: 100%;">
                       <v-flex

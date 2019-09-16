@@ -186,9 +186,7 @@ export default function (Vue, { router, head, isClient, appOptions }) {
 
         try {
           let response = await axios.get(url, {headers: headers})
-          console.log(response)
           if (response.data.data != null){
-            console.log(response.data.data)
             commit('setLocationPost', response.data.data)
           } else {
             commit('setLocationPost', {
@@ -288,9 +286,9 @@ export default function (Vue, { router, head, isClient, appOptions }) {
 
           meta = {
             lastPage: 1,
-            page: page,
-            perPage: limit,
-            total: limit,
+            page: 1,
+            perPage: 4,
+            total: 4,
           }
         }
 
